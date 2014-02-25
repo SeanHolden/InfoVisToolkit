@@ -1,6 +1,5 @@
 $(function(){
 
-
 initialize();
 
 function initialize(){
@@ -15,23 +14,31 @@ function initialize(){
 }
 
 function plotGraph(xaxisTitles, data){
-  console.log(data.length);
+  console.log(data);
+  console.log("XAXISTITLES: "+JSON.stringify(xaxisTitles));
 
-  // TODO: make this loop depending on how many lines are entered
-  var chart = [
-    {
-      // label: 'foo',
-      color: 'red',
-      data: data,
-      bars:{
-        show:true,
-        fill:1,
-        barWidth: 0.6,
-        align: 'center'
-      },
-      stack: 1
-    },
-  ];
+  var chart = [];
+
+    $.each(data, function(i, item){
+      if(i <= xaxisTitles.length-1){
+        console.log('AI: '+xaxisTitles[i]);
+        var label = xaxisTitles[i][1];
+      }
+      
+      chart.push({
+        // label: label,
+        // color: 'red',
+        data: item,
+        bars:{
+          show:true,
+          // fill:1,
+          barWidth: 0.1,
+          align: 'center',
+          order: 1
+        },
+        // stack: 1
+      });
+    });
 
   var options = {
     // legend: {
@@ -48,6 +55,7 @@ function plotGraph(xaxisTitles, data){
 function enterData(callback){
   var textareaData = $('textarea').val();
   var lines = textareaData.split('\n');
+  console.log("lines: "+lines.length);
   var data = [];
   var parsedData = [];
   var xaxisTitles = [];
@@ -60,16 +68,20 @@ function enterData(callback){
 
   // Parse the data into flot friendly format.
   $.each(data, function(i, line){
+    var tempData = []
     $.each(line, function(n, item){
       if(i==0){
-        xaxisTitles.push([n+1,item]);
+        xaxisTitles.push([n,item]);
       }else{
-        parsedData.push([n+1,parseInt(item)]);
+        tempData.push([n,parseInt(item)]);
       };
     });
-  }); // => xaxisTitles = [[1, "title1"], [2, "title2"], [3, "title3"]]
-      // => parsedData  = [[1, 100], [2, 200], [3, 300]]
+    parsedData.push(tempData);
+  });
+  parsedData.splice(0,1); // <- remove first empty element
 
+
+  console.log('HERE: '+parsedData);
   callback(xaxisTitles, parsedData);
 }
 
