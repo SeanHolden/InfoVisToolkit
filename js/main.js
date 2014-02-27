@@ -1,3 +1,14 @@
+var settings = {
+  stack: null,
+  bars: {
+    show: 1,
+    order:1,
+    aligned: 'left',
+    barWidth: 0.1
+  },
+  chartType:'bar'
+};
+
 $(function(){
 
 initialize();
@@ -5,8 +16,94 @@ initialize();
 function initialize(){
   // Make textarea automatically increase in size when data is entered.
   $('.infovis-area textarea').autogrow();
+  initEnterDataButton();
+  initStackToggleButton();
+  initChartTypeToggleButton();
+  initBarWidthAdjust();
+  resetChartToDefaults();
+}
+
+function initEnterDataButton(){
   // Initialize enter data button click event
   $('#enterdata').click(function(){
+    enterData(function(xaxis, data){
+      plotGraph(xaxis, data);
+    });
+  });
+}
+
+function initStackToggleButton(){
+  $('#stacked').click(function(){
+    if(settings.chartType!=='bar'){return false}; // button only works if chart type is bar.
+    settings.stack = settings.stack === null ? 1 : null;
+    settings.bars.order = settings.bars.order === null ? 1 : null;
+    settings.bars.aligned = settings.bars.aligned === 'left' ? 'center' : 'left';
+    if(settings.stack===1){
+      $('#stacked').html("Stacked: on");
+    }else{
+      $('#stacked').html("Stacked: off");
+    };
+    enterData(function(xaxis, data){
+      plotGraph(xaxis, data);
+    });
+  });
+}
+
+function initChartTypeToggleButton(){
+  $('#chart-type').click(function(){
+    settings.bars.show = settings.bars.show === 1 ? null : 1
+    if(settings.bars.show===1){
+      $('#chart-type').html("Chart: bar");
+      settings.chartType = 'bar';
+      $('#stacked').show();
+      $('#bar-width-plus').show();
+      $('#bar-width-minus').show();
+    }else{
+      $('#chart-type').html("Chart: line");
+      settings.chartType = 'line';
+      settings.stack = null;
+      settings.bars.order = 1;
+      $('#stacked').html("Stacked: off");
+      $('#stacked').hide();
+      $('#bar-width-plus').hide();
+      $('#bar-width-minus').hide();
+    };
+    enterData(function(xaxis, data){
+      plotGraph(xaxis, data);
+    });
+  });
+}
+
+function initBarWidthAdjust(){
+  $('#bar-width-plus').click(function(){
+    settings.bars.barWidth =  settings.bars.barWidth + 0.01;
+    enterData(function(xaxis, data){
+      plotGraph(xaxis, data);
+    });
+  });
+  $('#bar-width-minus').click(function(){
+    if(settings.bars.barWidth>=0.01){
+      settings.bars.barWidth =  settings.bars.barWidth - 0.01;
+    };
+    enterData(function(xaxis, data){
+      plotGraph(xaxis, data);
+    });
+  });
+}
+
+function resetChartToDefaults(){
+  $('#reset').click(function(){
+    $('button').show();
+    settings = {
+      stack: null,
+      bars: {
+        show: 1,
+        order:1,
+        aligned: 'left',
+        barWidth: 0.1
+      },
+      chartType:'bar'
+    };
     enterData(function(xaxis, data){
       plotGraph(xaxis, data);
     });
@@ -31,13 +128,13 @@ function plotGraph(xaxisTitles, data){
         // color: 'red',
         data: line,
         bars:{
-          show:true,
+          show:settings.bars.show,
           fill:1,
-          barWidth: 0.2,
-          align: 'center',
-          order: 1
+          barWidth: settings.bars.barWidth,
+          align: settings.bars.aligned,
+          order: settings.bars.order
         },
-        // stack: 1
+        stack: settings.stack
       });
     });
 
@@ -56,19 +153,15 @@ function enterData(callback){
   var textareaData = $('textarea').val();
   var lines = textareaData.split('\n');
   var multiSeries = lines.length > 2 ? true : false;
-  var data = [];
-  // var parsedData = [];
-  var xaxisTitles = [];
+  var data = new Array;
+  var xaxisTitles = new Array;
 
   // Split all CSV lines entered by user into array of arrays, called "data"
-  $.each(lines, function(i, line){
-    data.push(line.split(','));
-  }); // => data = [["title1"," title2","title3"],["100","200","300"]]
+  $.each(lines, function(i, line){data.push(line.split(','))});
+  // => data = [["title1"," title2","title3"],["100","200","300"]]
 
   var topLine = data.splice(0,1)[0];
-  $.each(topLine, function(i, item){
-    xaxisTitles.push([i,item]);
-  });
+  $.each(topLine, function(i, item){xaxisTitles.push([i,item])});
 
   if(multiSeries){
     createMultiSeriesChart(data, function(parsedData){
@@ -79,8 +172,6 @@ function enterData(callback){
       callback(xaxisTitles, parsedData);
     });
   };
-
-  
 }
 
 function createMultiSeriesChart(data, callback){
