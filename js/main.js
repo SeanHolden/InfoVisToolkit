@@ -14,9 +14,6 @@ function initialize(){
 }
 
 function plotGraph(xaxisTitles, data){
-  console.log("data: "+JSON.stringify(data)+" length: "+data.length);
-  console.log("XAXISTITLES: "+JSON.stringify(xaxisTitles));
-
   var chart = [];
 
     // Example of length 2 data:
@@ -58,9 +55,9 @@ function plotGraph(xaxisTitles, data){
 function enterData(callback){
   var textareaData = $('textarea').val();
   var lines = textareaData.split('\n');
-  console.log("lines: "+lines.length);
+  var multiSeries = lines.length > 2 ? true : false;
   var data = [];
-  var parsedData = [];
+  // var parsedData = [];
   var xaxisTitles = [];
 
   // Split all CSV lines entered by user into array of arrays, called "data"
@@ -68,28 +65,45 @@ function enterData(callback){
     data.push(line.split(','));
   }); // => data = [["title1"," title2","title3"],["100","200","300"]]
 
+  var topLine = data.splice(0,1)[0];
+  $.each(topLine, function(i, item){
+    xaxisTitles.push([i,item]);
+  });
 
-  // Parse the data into flot friendly format.
+  if(multiSeries){
+    createMultiSeriesChart(data, function(parsedData){
+      callback(xaxisTitles, parsedData);
+    });
+  }else{
+    createBasicChart(data[0], function(parsedData){
+      callback(xaxisTitles, parsedData);
+    });
+  };
+
+  
+}
+
+function createMultiSeriesChart(data, callback){
+  var parsedData = new Array;
   $.each(data, function(i, line){
-    var tempData = []
-    $.each(line, function(n, item){
-      if(i==0){
-        xaxisTitles.push([n,item]);
-      }else{
-        if(data.length>2){                                                          // if data is multi series...
-          if(n==0){tempData.push([n,item])}else{tempData.push([n,parseInt(item)])}; // don't parse first items to ints
-        }else{                                                                      // as they will be used in legend.
-          tempData.push([n,parseInt(item)]);
-        };
-      };
+    var tempData = new Array;
+    $.each(line, function(j, item){
+      // Parse data to int, unless it is first item in line, which will be a title.
+      var firstItem = j==0 ? true : false;
+      if(firstItem){tempData.push([j,item])}else{tempData.push([j,parseInt(item)])};
     });
     parsedData.push(tempData);
   });
-  parsedData.splice(0,1); // <- remove first empty element
+  callback(parsedData);
+};
 
-
-  console.log('HERE: '+parsedData);
-  callback(xaxisTitles, parsedData);
+function createBasicChart(line, callback){
+  var parsedData = new Array;
+  $.each(line, function(i, item){
+    parsedData.push([i,parseInt(item)]);
+  });
+  parsedData = [parsedData];
+  callback(parsedData);
 }
 
 
