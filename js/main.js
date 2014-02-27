@@ -14,25 +14,29 @@ function initialize(){
 }
 
 function plotGraph(xaxisTitles, data){
-  console.log(data);
+  console.log("data: "+JSON.stringify(data)+" length: "+data.length);
   console.log("XAXISTITLES: "+JSON.stringify(xaxisTitles));
 
   var chart = [];
 
-    $.each(data, function(i, item){
-      if(i <= xaxisTitles.length-1){
-        console.log('AI: '+xaxisTitles[i]);
-        var label = xaxisTitles[i][1];
+    // Example of length 2 data:
+    // [[[0,400],[1,500],[2,600]],[[0,700],[1,800],[2,900]]]
+    var label = null;
+    $.each(data, function(i, line){ // for each line in data...
+      
+      if(data.length>1){            // if the data is multi series.
+        var label = line[0][1];     // set legend label as first item in each line.
+        line.splice(0,1);           // ... then remove it from data.
       }
       
       chart.push({
-        // label: label,
+        label: label,
         // color: 'red',
-        data: item,
+        data: line,
         bars:{
           show:true,
-          // fill:1,
-          barWidth: 0.1,
+          fill:1,
+          barWidth: 0.2,
           align: 'center',
           order: 1
         },
@@ -42,7 +46,6 @@ function plotGraph(xaxisTitles, data){
 
   var options = {
     // legend: {
-    //   labelBoxBorderColor: 'black',
     //   position: "ne"
     // },
     xaxis: {
@@ -73,7 +76,11 @@ function enterData(callback){
       if(i==0){
         xaxisTitles.push([n,item]);
       }else{
-        tempData.push([n,parseInt(item)]);
+        if(data.length>2){                                                          // if data is multi series...
+          if(n==0){tempData.push([n,item])}else{tempData.push([n,parseInt(item)])}; // don't parse first items to ints
+        }else{                                                                      // as they will be used in legend.
+          tempData.push([n,parseInt(item)]);
+        };
       };
     });
     parsedData.push(tempData);
