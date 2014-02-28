@@ -154,6 +154,7 @@ function enterData(callback){
   var lines = textareaData.split('\n');
   // remove any accidental blank lines from array to remove chance of error
   for(var i=0;i<lines.length;i++){
+    lines[i] = lines[i].trim();
     if(lines[i].length===0){
       lines.splice(i,1);
       i--;
