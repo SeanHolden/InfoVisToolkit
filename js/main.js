@@ -10,8 +10,8 @@ var settings = {
 };
 
 $(function(){
-
-initialize();
+  initialize();
+});
 
 function initialize(){
   // Make textarea automatically increase in size when data is entered.
@@ -152,6 +152,14 @@ function plotGraph(xaxisTitles, data){
 function enterData(callback){
   var textareaData = $('textarea').val();
   var lines = textareaData.split('\n');
+  // remove any accidental blank lines from array to remove chance of error
+  for(var i=0;i<lines.length;i++){
+    if(lines[i].length===0){
+      lines.splice(i,1);
+      i--;
+    };
+  };
+
   var multiSeries = lines.length > 2 ? true : false;
   var data = new Array;
   var xaxisTitles = new Array;
@@ -196,6 +204,3 @@ function createBasicChart(line, callback){
   parsedData = [parsedData];
   callback(parsedData);
 }
-
-
-});
