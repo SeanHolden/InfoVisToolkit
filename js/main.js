@@ -28,6 +28,7 @@ function initEnterDataButton(){
   $('#enterdata').click(function(){
     enterData(function(xaxis, data){
       plotGraph(xaxis, data);
+      flipLegendAndXaxisData();
     });
   });
 }
@@ -174,6 +175,8 @@ function enterData(callback){
 
   if(multiSeries){
     createMultiSeriesChart(data, function(parsedData){
+      // console.log('Parsed data:\n'+JSON.stringify(parsedData));
+      // console.log('xaxisTitles:\n'+JSON.stringify(xaxisTitles));
       callback(xaxisTitles, parsedData);
     });
   }else{
@@ -181,6 +184,10 @@ function enterData(callback){
       callback(xaxisTitles, parsedData);
     });
   };
+}
+
+function prepareData(){
+
 }
 
 function createMultiSeriesChart(data, callback){
@@ -204,4 +211,66 @@ function createBasicChart(line, callback){
   });
   parsedData = [parsedData];
   callback(parsedData);
+}
+
+function flipLegendAndXaxisData(){
+  // ******* Same code as enterData
+  var textareaData = $('textarea').val();
+  var lines = textareaData.split('\n');
+  // remove any accidental blank lines from array to remove chance of error
+  for(var i=0;i<lines.length;i++){
+    lines[i] = lines[i].trim();
+    if(lines[i].length===0){
+      lines.splice(i,1);
+      i--;
+    };
+  };
+
+  var multiSeries = lines.length > 2 ? true : false;
+  var untrimmedData = new Array;
+  var data = new Array;
+  var xaxisTitles = new Array;
+
+  // Split all CSV lines entered by user into array of arrays, called "data"
+  $.each(lines, function(i, line){untrimmedData.push(line.split(','))});
+  // => data = [["title1"," title2","title3"],["100","200","300"]]
+
+  // ******* Same code as enterData - END
+
+  $.each(untrimmedData, function(i, item){
+    data.push(item.map(Function.prototype.call, String.prototype.trim));
+  });
+  // GOT: [["Names","Authorized","Unauthorized"],["Monday","300","250"],["Tuesday","360","420"],["Wednesday","570","610"],["Thursday","700","860"]] 
+  
+  // NEED: 
+  // xaxis titles: [[0,"Names"],[1," Monday"],[2," Tuesday"],[3," Wednesday"],[4," Thursday"]]
+  // data: [[[0,"Authorized"],[1,300],[2,360],[3,570],[4,700]],[[0,"Unauthorized"],[1,250],[2,420],[3,610],[4,860]]]
+
+  //[[[0,"Authorized"],[1,"300"],[2,"360"],[3,"570"],[4,"700"]],[[0,"Unauthorized"],[1,"250"],[2,"420"],[3,"610"],[4,"860"]]] 
+
+  // first get xaxis titles,
+  $.each(data, function(i, item){
+    var tempData = new Array;
+    xaxisTitles.push([i, item[0]])
+  });
+  
+  // then get data:
+  var parsedData = new Array;
+  for(var i=0;i<data[0].length;i++){
+    var tempData = new Array;
+    for(var j=0;j<data.length;j++){
+      console.log(j);
+      tempData.push([j, data[j][i]]);
+    };
+    parsedData.push(tempData);
+  };
+  
+  // remove xaxis titles from data. Already got that stored in var
+  parsedData.splice(0,1);
+
+
+
+  console.log("xaxisTitles:\n"+JSON.stringify(xaxisTitles));
+
+  console.log("Parsed Data:\n"+JSON.stringify(parsedData));
 }
