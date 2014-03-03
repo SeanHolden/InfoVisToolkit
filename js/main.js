@@ -101,6 +101,8 @@ function resetChartToDefaults(){
   $('#reset').click(function(){
     $('button').show();
     settings = {
+      flipData: false,
+      multiSeries: false,
       stack: null,
       bars: {
         show: 1,
