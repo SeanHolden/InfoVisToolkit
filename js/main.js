@@ -6,24 +6,37 @@ var settings = {
     show: 1,
     order:1,
     aligned: 'left',
-    barWidth: 0.1
+    barWidth: 0.1,
+    fill:1
   },
-  chartType:'bar'
+  lines:{
+    show:0,
+    fill:0
+  },
+  points:{
+    show:0,
+    fill:1,
+    radius:3,
+    fillColor:false //<-- need this otherwise fill color is white by default
+  }
 };
+
+var defaultSettings = settings;
 
 $(function(){
   initialize();
 });
+
 
 function initialize(){
   // Make textarea automatically increase in size when data is entered.
   $('.infovis-area textarea').autogrow();
   initEnterDataButton();
   initStackToggleButton();
-  initChartTypeToggleButton();
   initBarWidthAdjust();
   initFlipDataButton();
   resetChartToDefaults();
+  initCharttypeCheckbox();
 }
 
 function createChart(){
@@ -36,7 +49,6 @@ function createChart(){
       plotGraph(xaxis, data);
     });
   };
-
 }
 
 function initEnterDataButton(){
@@ -48,7 +60,6 @@ function initEnterDataButton(){
 
 function initStackToggleButton(){
   $('#stacked').click(function(){
-    if(settings.chartType!=='bar'){return false}; // button only works if chart type is bar.
     settings.stack = settings.stack === null ? 1 : null;
     settings.bars.order = settings.bars.order === null ? 1 : null;
     settings.bars.aligned = settings.bars.aligned === 'left' ? 'center' : 'left';
@@ -61,26 +72,59 @@ function initStackToggleButton(){
   });
 }
 
-function initChartTypeToggleButton(){
-  $('#chart-type').click(function(){
-    settings.bars.show = settings.bars.show === 1 ? null : 1
-    if(settings.bars.show===1){
-      $('#chart-type').html("Chart: bar");
-      settings.chartType = 'bar';
-      $('#stacked').show();
-      $('#bar-width-plus').show();
-      $('#bar-width-minus').show();
+function initCharttypeCheckbox(){
+  $('input[name=chartType]').click(function(){
+    if( $(this).is(':checked') ){
+      console.log(this.value+' checked');
+      switch(this.value){
+        case 'bar':
+          settings.bars.show = 1;
+          createChart();
+          break;
+        case 'line':
+          settings.lines.show = 1;
+          createChart();
+          break;
+        case 'scatter':
+          settings.points.show = 1;
+          createChart();
+          break;
+        case 'area':
+          settings.lines.show = 1;
+          settings.lines.fill = 1;
+          createChart();
+          break;
+        default:
+          console.log('Oops. An error occured. Checkbox value was not line, bar or scatter. 1');
+      }
     }else{
-      $('#chart-type').html("Chart: line");
-      settings.chartType = 'line';
-      settings.stack = null;
-      settings.bars.order = 1;
-      $('#stacked').html("Stacked: off");
-      $('#stacked').hide();
-      $('#bar-width-plus').hide();
-      $('#bar-width-minus').hide();
-    };
-    createChart();
+      console.log(this.value+' unchecked');
+      switch(this.value){
+        case 'bar':
+          settings.bars.show = 0;
+          createChart();
+          break;
+        case 'line':
+          var areaCheckbox = $('input[value=area]');
+          if( areaCheckbox.is(':checked') === false ){
+            settings.lines.show = 0;
+            createChart();
+          };
+          break;
+        case 'scatter':
+          settings.points.show = 0;
+          createChart();
+          break;
+        case 'area':
+          var linesCheckbox = $('input[value=line]');
+          if( linesCheckbox.is(':checked')===false ){settings.lines.show = 0};
+          settings.lines.fill = 0;
+          createChart();
+          break;
+        default:
+          console.log('Oops. An error occured. Checkbox value was not line, bar or scatter. 2');
+      }
+    }
   });
 }
 
@@ -100,18 +144,7 @@ function initBarWidthAdjust(){
 function resetChartToDefaults(){
   $('#reset').click(function(){
     $('button').show();
-    settings = {
-      flipData: false,
-      multiSeries: false,
-      stack: null,
-      bars: {
-        show: 1,
-        order:1,
-        aligned: 'left',
-        barWidth: 0.1
-      },
-      chartType:'bar'
-    };
+    settings = defaultSettings;
     enterData(function(xaxis, data){
       plotGraph(xaxis, data);
     });
@@ -149,13 +182,9 @@ function plotGraph(xaxisTitles, data){
         label: label,
         // color: 'red',
         data: line,
-        bars:{
-          show:settings.bars.show,
-          fill:1,
-          barWidth: settings.bars.barWidth,
-          align: settings.bars.aligned,
-          order: settings.bars.order
-        },
+        lines:settings.lines,
+        points:settings.points,
+        bars:settings.bars,
         stack: settings.stack
       });
     });

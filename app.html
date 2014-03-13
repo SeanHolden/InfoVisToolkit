@@ -41,11 +41,16 @@
                   <section class="button-container">
                     <button id="enterdata">Enter Data</button>
                     <button id="reset">Reset to defaults</button>
-                    <button id="chart-type">Chart: bar</button>
                     <button id="stacked">Stacked: off</button>
                     <button id="bar-width-plus">Bar Width +</button>
                     <button id="bar-width-minus">Bar Width -</button>
-                    <button id="flip-data">Flip Data</button>
+                    <button id="flip-data">Flip Data</button><br />
+                    <div>
+                        <input type="checkbox" name="chartType" value="bar" checked="true">Bar<br />
+                        <input type="checkbox" name="chartType" value="line">Line<br />
+                        <input type="checkbox" name="chartType" value="scatter">Scatter<br />
+                        <input type="checkbox" name="chartType" value="area">Area
+                    </div>
                   </section>
                   <div id="placeholder"></div>
                 </section>
