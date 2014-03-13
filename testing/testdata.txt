@@ -1,0 +1,15 @@
+Year 1, Year 2, Year 3, Year 4, Year 5
+81, 78, 49, 72, 63
+
+
+Ward, Authorised, Unauthorised
+City and Hunslet Ward, 6.52, 2.60
+Gipton and Harehills Ward, 5.77, 3.10
+Middleton Park Ward, 6.01, 2.70
+Burmantofts and Richmond Hill Ward, 5.78, 2.80
+Kirkstall Ward, 5.83, 2.60
+Adel and Wharfedale Ward, 4.54, 0.80
+Wetherby Ward, 4.68, 0.60
+Roundhay Ward, 4.21, 0.90
+Horsforth Ward,  4.42, 0.60
+Harewood Ward, 4.48, 0.50
