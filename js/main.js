@@ -3,7 +3,7 @@ var settings = {
   multiSeries: false,
   stack: null,
   bars: {
-    show: 1,
+    show: 0,
     order:1,
     aligned: 'left',
     barWidth: 0.1,
@@ -31,12 +31,12 @@ $(function(){
 function initialize(){
   // Make textarea automatically increase in size when data is entered.
   $('.infovis-area textarea').autogrow();
-  initEnterDataButton();
+  initReloadDataButton();
   initStackToggleButton();
   initBarWidthAdjust();
   initFlipDataButton();
-  resetChartToDefaults();
   initCharttypeCheckbox();
+  initResizeWindow();
 }
 
 function createChart(){
@@ -51,9 +51,15 @@ function createChart(){
   };
 }
 
-function initEnterDataButton(){
+function initResizeWindow(){
+  $(window).resize(function() {
+    createChart();
+  });
+}
+
+function initReloadDataButton(){
   // Initialize enter data button click event
-  $('#enterdata').click(function(){
+  $('#reload').click(function(){
     createChart();
   });
 }
@@ -74,8 +80,7 @@ function initStackToggleButton(){
 
 function initCharttypeCheckbox(){
   $('input[name=chartType]').click(function(){
-    if( $(this).is(':checked') ){
-      console.log(this.value+' checked');
+    if( this.checked === true ){
       switch(this.value){
         case 'bar':
           settings.bars.show = 1;
@@ -98,7 +103,6 @@ function initCharttypeCheckbox(){
           console.log('Oops. An error occured. Checkbox value was not line, bar or scatter. 1');
       }
     }else{
-      console.log(this.value+' unchecked');
       switch(this.value){
         case 'bar':
           settings.bars.show = 0;
@@ -130,24 +134,14 @@ function initCharttypeCheckbox(){
 
 function initBarWidthAdjust(){
   $('#bar-width-plus').click(function(){
-    settings.bars.barWidth =  settings.bars.barWidth + 0.01;
+    settings.bars.barWidth =  settings.bars.barWidth + 0.05;
     createChart();
   });
   $('#bar-width-minus').click(function(){
     if(settings.bars.barWidth>=0.01){
-      settings.bars.barWidth =  settings.bars.barWidth - 0.01;
+      settings.bars.barWidth =  settings.bars.barWidth - 0.05;
     };
     createChart();
-  });
-}
-
-function resetChartToDefaults(){
-  $('#reset').click(function(){
-    $('button').show();
-    settings = defaultSettings;
-    enterData(function(xaxis, data){
-      plotGraph(xaxis, data);
-    });
   });
 }
 
