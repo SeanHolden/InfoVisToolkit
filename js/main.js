@@ -5,7 +5,7 @@ var settings = {
   bars: {
     show: 0,
     order:1,
-    aligned: 'left',
+    aligned: 'center',
     barWidth: 0.1,
     fill:1
   },
@@ -18,17 +18,15 @@ var settings = {
     fill:1,
     radius:3,
     fillColor:false //<-- need this otherwise fill color is white by default
-  }
+  },
+  xaxisDrag: false,
+  xaxisRotated: false
 };
 
 var defaultSettings = settings;
 
 $(function(){
-  initialize();
-});
-
-
-function initialize(){
+  checkFileApiSupport();
   // Make textarea automatically increase in size when data is entered.
   $('.infovis-area textarea').autogrow();
   initReloadDataButton();
@@ -37,9 +35,44 @@ function initialize(){
   initFlipDataButton();
   initCharttypeCheckbox();
   initResizeWindow();
+  initDragXaxisButton();
+  initRotateButton();
+});
+
+function checkFileApiSupport(){
+  // Check for the various File API support.
+  if (window.File && window.FileReader && window.FileList && window.Blob) {
+    console.log('Success! Your browser supports the file API. You can import a CSV file.');
+    $('#csvfile')[0].addEventListener('change', readSingleFile, false);
+  } else {
+    alert('The File APIs are not fully supported in this browser.');
+  }
+}
+
+function readSingleFile(evt) {
+  //Retrieve the first (and only!) File from the FileList object
+  var f = evt.target.files[0]; 
+
+  if (f && f.name.split('.')[1]==='csv') {
+    var r = new FileReader();
+    r.onload = function(e) { 
+      var contents = e.target.result;
+      var numberOfLines = contents.split('\n').length;
+      $('textarea').html(contents).height(numberOfLines*20);
+      console.log(f.name);  
+    }
+    r.readAsText(f);
+  } else {
+    $('#csvfile').val(''); // <-- resetting the value of the file back to empty string as wrong type of file.
+    alert("File must be in CSV format.");
+  }
 }
 
 function createChart(){
+  // first reset any edits to default
+  $('.flot-x-axis > .flot-tick-label').off() //<--removes event handlers (drag)
+  settings.xaxisDrag=false;
+  xaxisRotated: false;
   if(settings.flipData===false){
     enterData(function(xaxis, data){
       plotGraph(xaxis, data);
@@ -51,6 +84,57 @@ function createChart(){
   };
 }
 
+function initDragXaxisButton(){
+  $('#drag-xaxis-titles').click(function(){
+    if(settings.xaxisDrag===false){
+      draggableXaxisTitles();
+    }else{
+      removeDragFeatureFromXaxisTitles();
+    }
+  });
+}
+
+function initRotateButton(){
+  $('#rotate-xaxis-titles').click(function(){
+    if(settings.xaxisRotated){
+      // just redraw chart to unrotate
+      createChart();
+      settings.xaxisRotated=false;
+    }else{
+      rotateXaxisTitles();
+      settings.xaxisRotated=true;
+    }
+  });
+}
+
+function rotateXaxisTitles(){
+  $('.flot-x-axis > .flot-tick-label').addClass('rotatedXaxis');
+  $('.flot-x-axis > .flot-tick-label').css('max-width','none');
+  var xaxisLabels = $('.flot-x-axis > .flot-tick-label');
+  for(var i=0;i<xaxisLabels.length;i++){
+    var label = xaxisLabels[i];
+    var labelLength = label.innerHTML.length; // <-- number of characters in string 
+    label.style.top = String(parseInt(label.style.top) + labelLength*2)+"px";
+    label.style.left = String(parseInt(label.style.left) + labelLength*-3.5)+"px";
+  }
+}
+
+function draggableXaxisTitles(){
+  $('.flot-x-axis > .flot-tick-label')
+  .css('z-index','999')
+  .css('border','1px dotted orange');
+  $('.flot-x-axis > .flot-tick-label').drags();
+  settings.xaxisDrag=true;
+}
+
+function removeDragFeatureFromXaxisTitles(){
+    $('.flot-x-axis > .flot-tick-label').off() //<--removes event handlers (drag)
+    .css('cursor','')
+    .css('border','');
+    settings.xaxisDrag=false;
+}
+
+// Redraw the chart when window is resized.
 function initResizeWindow(){
   $(window).resize(function() {
     createChart();
@@ -68,7 +152,7 @@ function initStackToggleButton(){
   $('#stacked').click(function(){
     settings.stack = settings.stack === null ? 1 : null;
     settings.bars.order = settings.bars.order === null ? 1 : null;
-    settings.bars.aligned = settings.bars.aligned === 'left' ? 'center' : 'left';
+    // settings.bars.aligned = settings.bars.aligned === 'left' ? 'center' : 'left';
     if(settings.stack===1){
       $('#stacked').html("Stacked: on");
     }else{
@@ -247,7 +331,7 @@ function createMultiSeriesChart(data, callback){
     $.each(line, function(j, item){
       // Parse data to int, unless it is first item in line, which will be a title.
       var firstItem = j==0 ? true : false;
-      if(firstItem){tempData.push([j,item])}else{tempData.push([j,parseInt(item)])};
+      if(firstItem){tempData.push([j,item])}else{tempData.push([j,parseFloat(item)])};
     });
     parsedData.push(tempData);
   });
@@ -257,7 +341,7 @@ function createMultiSeriesChart(data, callback){
 function createBasicChart(line, callback){
   var parsedData = new Array;
   $.each(line, function(i, item){
-    parsedData.push([i,parseInt(item)]);
+    parsedData.push([i,parseFloat(item)]);
   });
   parsedData = [parsedData];
   callback(parsedData);
@@ -280,7 +364,7 @@ function flipLegendAndXaxisData(callback){
         if(firstItem){
           tempData.push([j, data[j][i]]);
         }else{
-          tempData.push( [j, parseInt(data[j][i])] );
+          tempData.push( [j, parseFloat(data[j][i])] );
         };
       };
       parsedData.push(tempData);

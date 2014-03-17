@@ -234,6 +234,24 @@ button:active {
   margin-left:10px;
 }
 
+.rotatedXaxis {
+  /* Safari */
+  -webkit-transform: rotate(-45deg);
+
+  /* Firefox */
+  -moz-transform: rotate(-45deg);
+
+  /* IE */
+  -ms-transform: rotate(-45deg);
+
+  /* Opera */
+  -o-transform: rotate(-45deg);
+
+  /* Internet Explorer */
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
+}
+
 
 
 

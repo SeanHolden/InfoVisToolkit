@@ -37,13 +37,16 @@
             <div class="main wrapper clearfix">
                 <section class="infovis-area">
                   <p>Enter Data</p>
+                  <input type="file" id="csvfile" name="csvfile" /><br /><br />
                   <textarea></textarea>
                   <section class="button-container">
                     <button id="reload">Reload Data</button>
                     <button id="stacked">Stacked: off</button>
                     <button id="bar-width-plus">Bar Width +</button>
                     <button id="bar-width-minus">Bar Width -</button>
-                    <button id="flip-data">Flip Data</button><br />
+                    <button id="flip-data">Flip Data</button>
+                    <button id="drag-xaxis-titles">Edit Xaxis Titles</button>
+                    <button id="rotate-xaxis-titles">Rotate Xaxis Titles</button><br />
                     <div class="chartTypeCheckboxes">
                         <input type="checkbox" name="chartType" value="bar">Bar<br />
                         <input type="checkbox" name="chartType" value="line">Line<br />
@@ -69,6 +72,7 @@
         <script type="text/javascript" src="js/vendor/jquery.flot.stack.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.flot.orderbars.js"></script>
         <script type="text/javascript" src="js/vendor/autogrowTextarea.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery.draggable.min.js"></script>
 
         <script src="js/main.js"></script>
 
