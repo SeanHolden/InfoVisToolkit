@@ -173,15 +173,14 @@ nav a:hover {
     max-height:200px;
 }
 
-
 #placeholder{
     max-width:90%;
     margin:auto;
-    height:300px;
+    height:30em;
 }
 
 #placeholder > div.legend > table {
-      border: 1px black solid;
+    border: 1px black solid;
 }
 
 .button-container{
@@ -229,7 +228,7 @@ button:active {
   filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
 }
 
-.chartTypeCheckboxes{
+.chartTypeRadioButtons{
   text-align:left;
   margin-left:10px;
 }

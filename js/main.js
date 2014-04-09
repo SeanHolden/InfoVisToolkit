@@ -19,6 +19,9 @@ var settings = {
     radius:3,
     fillColor:false //<-- need this otherwise fill color is white by default
   },
+  xaxis:{
+    rotateTicks: false
+  },
   xaxisDrag: false,
   xaxisRotated: false
 };
@@ -33,7 +36,7 @@ $(function(){
   initStackToggleButton();
   initBarWidthAdjust();
   initFlipDataButton();
-  initCharttypeCheckbox();
+  initChartTypeRadioButtons();
   initResizeWindow();
   initDragXaxisButton();
   initRotateButton();
@@ -96,14 +99,21 @@ function initDragXaxisButton(){
 
 function initRotateButton(){
   $('#rotate-xaxis-titles').click(function(){
-    if(settings.xaxisRotated){
-      // just redraw chart to unrotate
+    if(settings.xaxis.rotateTicks === false){
+      settings.xaxis.rotateTicks = 45;
       createChart();
-      settings.xaxisRotated=false;
     }else{
-      rotateXaxisTitles();
-      settings.xaxisRotated=true;
+      settings.xaxis.rotateTicks = false
+      createChart();
     }
+    // if(settings.xaxisRotated){
+    //   // just redraw chart to unrotate
+    //   createChart();
+    //   settings.xaxisRotated=false;
+    // }else{
+    //   rotateXaxisTitles();
+    //   settings.xaxisRotated=true;
+    // }
   });
 }
 
@@ -162,58 +172,50 @@ function initStackToggleButton(){
   });
 }
 
-function initCharttypeCheckbox(){
+function initChartTypeRadioButtons(){
   $('input[name=chartType]').click(function(){
-    if( this.checked === true ){
-      switch(this.value){
-        case 'bar':
+    getRadioButtonValue(function(radioValue){
+      switch(radioValue){
+        case 'column':
           settings.bars.show = 1;
-          createChart();
-          break;
-        case 'line':
-          settings.lines.show = 1;
-          createChart();
-          break;
-        case 'scatter':
-          settings.points.show = 1;
-          createChart();
-          break;
-        case 'area':
-          settings.lines.show = 1;
-          settings.lines.fill = 1;
-          createChart();
-          break;
-        default:
-          console.log('Oops. An error occured. Checkbox value was not line, bar or scatter. 1');
-      }
-    }else{
-      switch(this.value){
-        case 'bar':
-          settings.bars.show = 0;
-          createChart();
-          break;
-        case 'line':
-          var areaCheckbox = $('input[value=area]');
-          if( areaCheckbox.is(':checked') === false ){
-            settings.lines.show = 0;
-            createChart();
-          };
-          break;
-        case 'scatter':
+          settings.lines.show = 0;
           settings.points.show = 0;
-          createChart();
-          break;
-        case 'area':
-          var linesCheckbox = $('input[value=line]');
-          if( linesCheckbox.is(':checked')===false ){settings.lines.show = 0};
           settings.lines.fill = 0;
           createChart();
           break;
-        default:
-          console.log('Oops. An error occured. Checkbox value was not line, bar or scatter. 2');
+        case 'line':
+          settings.bars.show = 0;
+          settings.lines.show = 1;
+          settings.points.show = 0;
+          settings.lines.fill = 0;
+          createChart();
+          break;
+        case 'points':
+          settings.bars.show = 0;
+          settings.lines.show = 0;
+          settings.points.show = 1;
+          settings.lines.fill = 0;
+          createChart();
+          break;
+        case 'area':
+          settings.bars.show = 0;
+          settings.lines.show = 1;
+          settings.points.show = 0;
+          settings.lines.fill = 1;
+          createChart();
+          break;
       }
-    }
+    });
   });
+}
+
+function getRadioButtonValue(callback){
+  var elements = document.getElementsByName("chartType");
+  for (var i=0; i<elements.length; i++){
+    if (elements[i].checked){
+      callback(elements[i].value);
+    }
+  }
 }
 
 function initBarWidthAdjust(){
@@ -272,10 +274,13 @@ function plotGraph(xaxisTitles, data){
     //   position: "ne"
     // },
     xaxis: {
-      ticks: xaxisTitles
+      ticks: xaxisTitles,
+      rotateTicks: settings.xaxis.rotateTicks,
+      axisLabel: 'FOOOOOOO',
     }
   };
   $.plot($("#placeholder"), chart, options);
+  $('.axisLabels').css('color','#000').css('font-weight','bold'); // <- color xaxis title in
 }
 
 function enterData(callback){
