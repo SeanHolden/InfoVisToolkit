@@ -23,6 +23,9 @@ var settings = {
     rotateTicks: false,
     axisLabel: false
   },
+  yaxis:{
+    axisLabel: $('#editYAxis input').val()
+  },
   xaxisDrag: false,
   xaxisRotated: false
 };
@@ -87,6 +90,24 @@ function createChart(){
     });
   };
 }
+function initYAxisLabelButton(){
+  $('.yaxisLabel').unbind();
+  $('#editYAxis button').unbind();
+  $('.yaxisLabel').click(function(){
+    console.log('clicked!!');
+    $('#editYAxis').show();
+  });
+  $('#editYAxis button').click(function(){
+    updateYAxisLabel();
+    $('#editYAxis').hide();
+  });
+}
+
+function updateYAxisLabel(){
+  var yaxisValue = $('#editYAxis input').val();
+  settings.yaxis.axisLabel = yaxisValue;
+  createChart();
+}
 
 function initDragXaxisButton(){
   $('#drag-xaxis-titles').click(function(){
@@ -107,28 +128,20 @@ function initRotateButton(){
       settings.xaxis.rotateTicks = false
       createChart();
     }
-    // if(settings.xaxisRotated){
-    //   // just redraw chart to unrotate
-    //   createChart();
-    //   settings.xaxisRotated=false;
-    // }else{
-    //   rotateXaxisTitles();
-    //   settings.xaxisRotated=true;
-    // }
   });
 }
 
-function rotateXaxisTitles(){
-  $('.flot-x-axis > .flot-tick-label').addClass('rotatedXaxis');
-  $('.flot-x-axis > .flot-tick-label').css('max-width','none');
-  var xaxisLabels = $('.flot-x-axis > .flot-tick-label');
-  for(var i=0;i<xaxisLabels.length;i++){
-    var label = xaxisLabels[i];
-    var labelLength = label.innerHTML.length; // <-- number of characters in string 
-    label.style.top = String(parseInt(label.style.top) + labelLength*2)+"px";
-    label.style.left = String(parseInt(label.style.left) + labelLength*-3.5)+"px";
-  }
-}
+// function rotateXaxisTitles(){
+//   $('.flot-x-axis > .flot-tick-label').addClass('rotatedXaxis');
+//   $('.flot-x-axis > .flot-tick-label').css('max-width','none');
+//   var xaxisLabels = $('.flot-x-axis > .flot-tick-label');
+//   for(var i=0;i<xaxisLabels.length;i++){
+//     var label = xaxisLabels[i];
+//     var labelLength = label.innerHTML.length; // <-- number of characters in string 
+//     label.style.top = String(parseInt(label.style.top) + labelLength*2)+"px";
+//     label.style.left = String(parseInt(label.style.left) + labelLength*-3.5)+"px";
+//   }
+// }
 
 function draggableXaxisTitles(){
   $('.flot-x-axis > .flot-tick-label')
@@ -285,12 +298,13 @@ function plotGraph(xaxisTitles, data){
       axisLabel: settings.xaxis.axisLabel,
     },
     yaxis: {
-      axisLabel: 'Barrr',
+      axisLabel: settings.yaxis.axisLabel,
       labelWidth:20
     }
   };
   $.plot($("#placeholder"), chart, options);
   $('.axisLabels').css('color','#444').css('font-weight','bold'); // <- xaxis title styles
+  initYAxisLabelButton();
 
 }
 
