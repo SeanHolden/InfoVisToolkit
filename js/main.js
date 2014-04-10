@@ -20,7 +20,8 @@ var settings = {
     fillColor:false //<-- need this otherwise fill color is white by default
   },
   xaxis:{
-    rotateTicks: false
+    rotateTicks: false,
+    axisLabel: false
   },
   xaxisDrag: false,
   xaxisRotated: false
@@ -100,7 +101,7 @@ function initDragXaxisButton(){
 function initRotateButton(){
   $('#rotate-xaxis-titles').click(function(){
     if(settings.xaxis.rotateTicks === false){
-      settings.xaxis.rotateTicks = 45;
+      settings.xaxis.rotateTicks = 135;
       createChart();
     }else{
       settings.xaxis.rotateTicks = false
@@ -247,6 +248,11 @@ function toggleFlipDataValue(callback){
 
 function plotGraph(xaxisTitles, data){
   var chart = [];
+  if(settings.xaxis.axisLabel === false){
+    settings.xaxis.axisLabel = xaxisTitles[0][1]
+  }
+  
+  xaxisTitles[0][1] = ''; // <-- remove top left item in data so it does not appear as a label
 
     // Example of length 2 data:
     // [[[0,400],[1,500],[2,600]],[[0,700],[1,800],[2,900]]]
@@ -276,11 +282,16 @@ function plotGraph(xaxisTitles, data){
     xaxis: {
       ticks: xaxisTitles,
       rotateTicks: settings.xaxis.rotateTicks,
-      axisLabel: 'FOOOOOOO',
+      axisLabel: settings.xaxis.axisLabel,
+    },
+    yaxis: {
+      axisLabel: 'Barrr',
+      labelWidth:20
     }
   };
   $.plot($("#placeholder"), chart, options);
-  $('.axisLabels').css('color','#000').css('font-weight','bold'); // <- color xaxis title in
+  $('.axisLabels').css('color','#444').css('font-weight','bold'); // <- xaxis title styles
+
 }
 
 function enterData(callback){
