@@ -21,13 +21,16 @@ var settings = {
   },
   xaxis:{
     rotateTicks: false,
-    axisLabel: false
+    axisLabel: $('#editXAxis input').val()
   },
   yaxis:{
     axisLabel: $('#editYAxis input').val()
   },
-  xaxisDrag: false,
-  xaxisRotated: false
+  legend:{
+    position: "ne"
+  },
+  // xaxisDrag: false,
+  // xaxisRotated: false
 };
 
 var defaultSettings = settings;
@@ -42,7 +45,7 @@ $(function(){
   initFlipDataButton();
   initChartTypeRadioButtons();
   initResizeWindow();
-  initDragXaxisButton();
+  initMoveLegendButton();
   initRotateButton();
 });
 
@@ -65,8 +68,8 @@ function readSingleFile(evt) {
     r.onload = function(e) { 
       var contents = e.target.result;
       var numberOfLines = contents.split('\n').length;
-      $('textarea').html(contents).height(numberOfLines*20);
-      console.log(f.name);  
+      $('textarea').val(contents).height(numberOfLines*20);
+      console.log(f.name);
     }
     r.readAsText(f);
   } else {
@@ -76,10 +79,10 @@ function readSingleFile(evt) {
 }
 
 function createChart(){
-  // first reset any edits to default
-  $('.flot-x-axis > .flot-tick-label').off() //<--removes event handlers (drag)
-  settings.xaxisDrag=false;
-  xaxisRotated: false;
+  // // first reset any edits to default
+  // $('.flot-x-axis > .flot-tick-label').off() //<--removes event handlers (drag)
+  // settings.xaxisDrag=false;
+  // xaxisRotated: false;
   if(settings.flipData===false){
     enterData(function(xaxis, data){
       plotGraph(xaxis, data);
@@ -90,33 +93,26 @@ function createChart(){
     });
   };
 }
-function initYAxisLabelButton(){
-  $('.yaxisLabel').unbind();
-  $('#editYAxis button').unbind();
-  $('.yaxisLabel').click(function(){
-    console.log('clicked!!');
-    $('#editYAxis').show();
+
+function initXandYAxisLabelButton(XorY){
+  var uppercaseXorY = XorY.toUpperCase();
+  $('.'+XorY+'axisLabel').unbind();
+  $('#edit'+uppercaseXorY+'Axis button').unbind();
+  $('.'+XorY+'axisLabel').click(function(){
+    $('#edit'+uppercaseXorY+'Axis').show();
   });
-  $('#editYAxis button').click(function(){
-    updateYAxisLabel();
-    $('#editYAxis').hide();
+  $('#edit'+uppercaseXorY+'Axis button').click(function(){
+    updateXAxisLabel();
+    $('#edit'+uppercaseXorY+'Axis').hide();
   });
 }
 
-function updateYAxisLabel(){
-  var yaxisValue = $('#editYAxis input').val();
+function updateXAxisLabel(){
+  var xaxisValue = xaxisValue = $('#editXAxis input').val();
+  var yaxisValue = yaxisValue = $('#editYAxis input').val();
+  settings.xaxis.axisLabel = xaxisValue;
   settings.yaxis.axisLabel = yaxisValue;
   createChart();
-}
-
-function initDragXaxisButton(){
-  $('#drag-xaxis-titles').click(function(){
-    if(settings.xaxisDrag===false){
-      draggableXaxisTitles();
-    }else{
-      removeDragFeatureFromXaxisTitles();
-    }
-  });
 }
 
 function initRotateButton(){
@@ -129,33 +125,6 @@ function initRotateButton(){
       createChart();
     }
   });
-}
-
-// function rotateXaxisTitles(){
-//   $('.flot-x-axis > .flot-tick-label').addClass('rotatedXaxis');
-//   $('.flot-x-axis > .flot-tick-label').css('max-width','none');
-//   var xaxisLabels = $('.flot-x-axis > .flot-tick-label');
-//   for(var i=0;i<xaxisLabels.length;i++){
-//     var label = xaxisLabels[i];
-//     var labelLength = label.innerHTML.length; // <-- number of characters in string 
-//     label.style.top = String(parseInt(label.style.top) + labelLength*2)+"px";
-//     label.style.left = String(parseInt(label.style.left) + labelLength*-3.5)+"px";
-//   }
-// }
-
-function draggableXaxisTitles(){
-  $('.flot-x-axis > .flot-tick-label')
-  .css('z-index','999')
-  .css('border','1px dotted orange');
-  $('.flot-x-axis > .flot-tick-label').drags();
-  settings.xaxisDrag=true;
-}
-
-function removeDragFeatureFromXaxisTitles(){
-    $('.flot-x-axis > .flot-tick-label').off() //<--removes event handlers (drag)
-    .css('cursor','')
-    .css('border','');
-    settings.xaxisDrag=false;
 }
 
 // Redraw the chart when window is resized.
@@ -183,6 +152,29 @@ function initStackToggleButton(){
       $('#stacked').html("Stacked: off");
     };
     createChart();
+  });
+}
+
+function initMoveLegendButton(){
+  $('#move-legend').click(function(){
+    switch(settings.legend.position){
+      case 'ne':
+        settings.legend.position = 'se';
+        createChart();
+        break;
+      case 'se':
+        settings.legend.position = 'sw';
+        createChart();
+        break;
+      case 'sw':
+        settings.legend.position = 'nw';
+        createChart();
+        break;
+      case 'nw':
+        settings.legend.position = 'ne';
+        createChart();
+        break;
+    }
   });
 }
 
@@ -261,11 +253,6 @@ function toggleFlipDataValue(callback){
 
 function plotGraph(xaxisTitles, data){
   var chart = [];
-  if(settings.xaxis.axisLabel === false){
-    settings.xaxis.axisLabel = xaxisTitles[0][1]
-  }
-  
-  xaxisTitles[0][1] = ''; // <-- remove top left item in data so it does not appear as a label
 
     // Example of length 2 data:
     // [[[0,400],[1,500],[2,600]],[[0,700],[1,800],[2,900]]]
@@ -273,6 +260,7 @@ function plotGraph(xaxisTitles, data){
     $.each(data, function(i, line){ // for each line in data...
       
       if(data.length>1){            // if the data is multi series.
+        xaxisTitles[0][1] = '';     // <-- remove top left item in data so it does not appear as a label
         var label = line[0][1];     // set legend label as first item in each line.
         line.splice(0,1);           // ... then remove it from data.
       }
@@ -289,9 +277,9 @@ function plotGraph(xaxisTitles, data){
     });
 
   var options = {
-    // legend: {
-    //   position: "ne"
-    // },
+    legend: {
+      position: settings.legend.position
+    },
     xaxis: {
       ticks: xaxisTitles,
       rotateTicks: settings.xaxis.rotateTicks,
@@ -299,13 +287,15 @@ function plotGraph(xaxisTitles, data){
     },
     yaxis: {
       axisLabel: settings.yaxis.axisLabel,
-      labelWidth:20
+      // labelWidth:-20
     }
   };
   $.plot($("#placeholder"), chart, options);
   $('.axisLabels').css('color','#444').css('font-weight','bold'); // <- xaxis title styles
-  initYAxisLabelButton();
-
+  // initYAxisLabelButton();
+  // initXAxisLabelButton();
+  initXandYAxisLabelButton('x');
+  initXandYAxisLabelButton('y');
 }
 
 function enterData(callback){
