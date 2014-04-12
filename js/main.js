@@ -29,6 +29,9 @@ var settings = {
   legend:{
     position: "ne"
   },
+  mainTitle:{
+    value: $('#editMainTitle input').val()
+  }
 };
 
 var defaultSettings = settings;
@@ -108,6 +111,23 @@ function updateXAxisLabel(){
   settings.yaxis.axisLabel = yaxisValue;
   createChart();
 }
+
+function editMainTitle(){
+  $('#editMainTitle button').unbind(); // remove previous click events so they don't stack
+  $('#mainTitle')
+  .unbind()
+  .show()
+  .html(settings.mainTitle.value)
+  .click(function(){
+    $('#editMainTitle').show();
+  });
+  $('#editMainTitle button').click(function(){
+    settings.mainTitle.value = $('#editMainTitle input').val();
+    $('#editMainTitle').hide();
+    createChart();
+  });
+}
+
 
 function initRotateButton(){
   $('#rotate-xaxis-titles').click(function(){
@@ -287,6 +307,7 @@ function plotGraph(xaxisTitles, data){
   $('.axisLabels').css('color','#444').css('font-weight','bold'); // <- xaxis title styles
   initXandYAxisLabelButton('x');
   initXandYAxisLabelButton('y');
+  editMainTitle();
 }
 
 function enterData(callback){
