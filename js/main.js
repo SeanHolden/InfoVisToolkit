@@ -29,8 +29,6 @@ var settings = {
   legend:{
     position: "ne"
   },
-  // xaxisDrag: false,
-  // xaxisRotated: false
 };
 
 var defaultSettings = settings;
@@ -79,10 +77,6 @@ function readSingleFile(evt) {
 }
 
 function createChart(){
-  // // first reset any edits to default
-  // $('.flot-x-axis > .flot-tick-label').off() //<--removes event handlers (drag)
-  // settings.xaxisDrag=false;
-  // xaxisRotated: false;
   if(settings.flipData===false){
     enterData(function(xaxis, data){
       plotGraph(xaxis, data);
@@ -145,7 +139,6 @@ function initStackToggleButton(){
   $('#stacked').click(function(){
     settings.stack = settings.stack === null ? 1 : null;
     settings.bars.order = settings.bars.order === null ? 1 : null;
-    // settings.bars.aligned = settings.bars.aligned === 'left' ? 'center' : 'left';
     if(settings.stack===1){
       $('#stacked').html("Stacked: on");
     }else{
@@ -292,8 +285,6 @@ function plotGraph(xaxisTitles, data){
   };
   $.plot($("#placeholder"), chart, options);
   $('.axisLabels').css('color','#444').css('font-weight','bold'); // <- xaxis title styles
-  // initYAxisLabelButton();
-  // initXAxisLabelButton();
   initXandYAxisLabelButton('x');
   initXandYAxisLabelButton('y');
 }
