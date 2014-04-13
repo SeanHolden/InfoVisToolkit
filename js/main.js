@@ -7,7 +7,7 @@ var settings = {
     order:1,
     aligned: 'center',
     barWidth: 0.1,
-    fill:1
+    fill:1,
   },
   lines:{
     show:0,
@@ -96,6 +96,9 @@ function initXandYAxisLabelButton(XorY){
   $('.'+XorY+'axisLabel').unbind();
   $('#edit'+uppercaseXorY+'Axis button').unbind();
   $('.'+XorY+'axisLabel').click(function(){
+    $('#editYAxis').hide();
+    $('#editXAxis').hide();
+    $('#editMainTitle').hide();
     $('#edit'+uppercaseXorY+'Axis').show();
   });
   $('#edit'+uppercaseXorY+'Axis button').click(function(){
@@ -120,6 +123,8 @@ function editMainTitle(){
   .html(settings.mainTitle.value)
   .click(function(){
     $('#editMainTitle').show();
+    $('#editXAxis').hide();
+    $('#editYAxis').hide();
   });
   $('#editMainTitle button').click(function(){
     settings.mainTitle.value = $('#editMainTitle input').val();
