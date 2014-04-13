@@ -31,7 +31,8 @@ var settings = {
   },
   mainTitle:{
     value: $('#editMainTitle input').val()
-  }
+  },
+  draggableTitles: false
 };
 
 var defaultSettings = settings;
@@ -48,6 +49,9 @@ $(function(){
   initResizeWindow();
   initMoveLegendButton();
   initRotateButton();
+  initDragTitles();
+  addParagraphButtons();
+  addOverallTitleButton();
 });
 
 function checkFileApiSupport(){
@@ -95,11 +99,12 @@ function initXandYAxisLabelButton(XorY){
   var uppercaseXorY = XorY.toUpperCase();
   $('.'+XorY+'axisLabel').unbind();
   $('#edit'+uppercaseXorY+'Axis button').unbind();
-  $('.'+XorY+'axisLabel').click(function(){
+  $('.'+XorY+'axisLabel').click(function(event){
     $('#editYAxis').hide();
     $('#editXAxis').hide();
     $('#editMainTitle').hide();
-    $('#edit'+uppercaseXorY+'Axis').show();
+    $('#edit'+uppercaseXorY+'Axis').show()
+    .css({position:"absolute", top:event.pageY, left: event.pageX, "z-index":"9999"});
   });
   $('#edit'+uppercaseXorY+'Axis button').click(function(){
     updateXAxisLabel();
@@ -108,8 +113,19 @@ function initXandYAxisLabelButton(XorY){
 }
 
 function updateXAxisLabel(){
-  var xaxisValue = xaxisValue = $('#editXAxis input').val();
-  var yaxisValue = yaxisValue = $('#editYAxis input').val();
+  var newValueX = $('#editXAxis input').val();
+  var newValueY = $('#editYAxis input').val();
+  var defaultValue = "-Click To Edit Me-"
+  if(newValueX.trim() === ""){
+    $('#editXAxis input').val(defaultValue);
+    newValueX = defaultValue; 
+  }
+  if(newValueY.trim() === ""){
+    $('#editYAxis input').val(defaultValue);
+    newValueY = defaultValue; 
+  }
+  var xaxisValue = xaxisValue = newValueX;
+  var yaxisValue = yaxisValue = newValueY;
   settings.xaxis.axisLabel = xaxisValue;
   settings.yaxis.axisLabel = yaxisValue;
   createChart();
@@ -121,17 +137,29 @@ function editMainTitle(){
   .unbind()
   .show()
   .html(settings.mainTitle.value)
-  .click(function(){
-    $('#editMainTitle').show();
+  .click(function(event){
+    $('#editMainTitle').show()
+    .css({position:"absolute", top:event.pageY, left: event.pageX, "z-index":"9999"});
     $('#editXAxis').hide();
     $('#editYAxis').hide();
   });
   $('#editMainTitle button').click(function(){
-    settings.mainTitle.value = $('#editMainTitle input').val();
+    var newValue = $('#editMainTitle input').val();
+    if(newValue.trim() === ""){
+      var defaultValue = "-Click To Edit Me-"
+      $('#editMainTitle input').val(defaultValue);
+      newValue = defaultValue;
+    }
+    settings.mainTitle.value = newValue;
     $('#editMainTitle').hide();
     createChart();
   });
 }
+
+// $( "td").click( function(event) {
+//   $("#divId").css( {position:"absolute", top:event.pageY, left: event.pageX});
+// });
+
 
 
 function initRotateButton(){
@@ -192,6 +220,67 @@ function initMoveLegendButton(){
         settings.legend.position = 'ne';
         createChart();
         break;
+    }
+  });
+}
+
+function initDragTitles(){
+  $('#dragTitles').click(function(){
+    if(settings.draggableTitles == false){
+      $('.yaxisLabel').unbind().drags();
+      $('.xaxisLabel').unbind().drags();
+      $('#mainTitle').unbind().drags();
+      settings.draggableTitles = true;
+      $('#dragTitles').html('Finish Dragging Titles').css('background','red');
+    }else{
+      $('.yaxisLabel').unbind().css('cursor','initial');
+      $('.xaxisLabel').unbind().css('cursor','initial');
+      $('#mainTitle').unbind().css('cursor','initial');
+      initXandYAxisLabelButton('x');
+      initXandYAxisLabelButton('y');
+      editMainTitle();
+      $('#dragTitles').html('Drag and Drop Titles').attr('style','');
+      settings.draggableTitles = false;
+    }
+  });
+}
+
+function addParagraphButtons(){
+  var loremIpsumText = "<p>Lorem ipsum dolor sit amet, \
+                                    consectetur adipiscing elit. Vestibulum \
+                                    tortor libero, egestas ac sodales et, \
+                                    vehicula eget erat. Nullam iaculis congue \
+                                    molestie. Suspendisse potenti. Proin ornare \
+                                    auctor ligula, in consectetur metus. Praesent \
+                                    fermentum ultricies tortor, non eleifend lacus \
+                                    vehicula tempor. Praesent suscipit quam a dolor \
+                                    gravida suscipit. Suspendisse vel mi sit amet \
+                                    metus consectetur iaculis. Duis tempus sagittis \
+                                    est, a facilisis augue imperdiet faucibus. In \
+                                    quis eros et metus ullamcorper elementum et \
+                                    sit amet est. Cras cursus condimentum dolor \
+                                    a ullamcorper.</p>"
+  $('#addParagraphUp').click(function(){
+    addParagraphAboveChart(loremIpsumText);
+  });
+    $('#addParagraphDown').click(function(){
+    addParagraphBelowChart(loremIpsumText);
+  });
+}
+
+function addParagraphAboveChart(loremIpsumText){
+  $('#textDescriptionArea').append(loremIpsumText);
+}
+
+function addParagraphBelowChart(loremIpsumText){
+  $('#textDescriptionArea2').append(loremIpsumText);
+}
+
+function addOverallTitleButton(){
+  $('#addOverallTitle').click(function(){
+    var area = $('#overallTitleArea');
+    if(area.children().length === 0){
+      area.append("<h1 style=\"padding-top:2em;\">Main Title</h1>");
     }
   });
 }
@@ -309,7 +398,8 @@ function plotGraph(xaxisTitles, data){
     }
   };
   $.plot($("#placeholder"), chart, options);
-  $('.axisLabels').css('color','#444').css('font-weight','bold'); // <- xaxis title styles
+  $('.axisLabels').css('color','#444').css('font-weight','bold'); // <- axis title styles
+  $('.yaxisLabel').css('transform', 'translate(-60.5px, 200px) rotate(-90deg)');
   initXandYAxisLabelButton('x');
   initXandYAxisLabelButton('y');
   editMainTitle();

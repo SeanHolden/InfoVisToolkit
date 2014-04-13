@@ -159,13 +159,13 @@ nav a:hover {
    ========================================================================== */
 
 .infovis-area {
-    border: 2px solid black;
     text-align:center;
 }
 
-.infovis-area p{
+div.main-container > div > section > p{
     font-weight:bold;
 }
+
 
 .infovis-area textarea{
     width:90%;
@@ -251,6 +251,28 @@ button:active {
 
 }
 
+#a4area{
+  text-align:center;
+  width:80%;
+  margin:auto;
+  -webkit-box-shadow: 2px 0 7px rgba(0,0,0,1);
+  -moz-box-shadow: 2px 0 7px rgba(0,0,0,1);
+  box-shadow: 2px 0 7px rgba(0,0,0,1);
+}
+
+#textDescriptionArea{
+  margin:2em;
+  text-align:justify;
+  padding-top:1em;
+  font-weight:normal;
+}
+
+#textDescriptionArea2{
+  padding-bottom:5em;
+  margin:2em;
+  text-align:justify;
+  font-weight:normal;
+}
 
 
 
@@ -420,6 +442,8 @@ button:active {
         color: #000 !important; /* Black prints faster: h5bp.com/s */
         box-shadow: none !important;
         text-shadow: none !important;
+        margin:0;
+        padding:0;
     }
 
     a,
@@ -479,4 +503,26 @@ button:active {
     h3 {
         page-break-after: avoid;
     }
+
+    .header-container, .footer-container, textarea, .button-container{
+      display:none;
+    }
+
+    /* "Enter Data" section */
+    div.main-container > div > section > p,
+    #csvfile{
+      display:none;
+    }
+
+    #textDescriptionArea p{
+      width:19cm;
+      margin-left:-3cm;
+      font-size:0.8em;
+      /*margin:right:100cm;*/
+    }
+
+/*    #a4area{
+      width:80%;
+    }*/
+
 }
