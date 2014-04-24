@@ -23,39 +23,64 @@
         <div class="header-container">
             <header class="wrapper clearfix">
                 <h1 class="title">Information Visualization Toolkit</h1>
-                <nav>
-                    <ul>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
-                    </ul>
-                </nav>
             </header>
         </div>
 
         <div class="main-container">
             <div class="main wrapper clearfix">
                 <section class="infovis-area">
-                  <p>Enter Data</p>
+                  <p>Enter CSV Data</p>
                   <input type="file" id="csvfile" name="csvfile" /><br /><br />
                   <textarea></textarea>
                   <section class="button-container">
-                    <button id="reload">Reload Data</button>
-                    <button id="stacked">Stacked: off</button>
-                    <button id="bar-width-plus">Bar Width +</button>
-                    <button id="bar-width-minus">Bar Width -</button>
-                    <button id="flip-data">Flip Data</button>
-                    <button id="rotate-xaxis-titles">Rotate Xaxis Titles</button>
-                    <button id="move-legend">Move Legend Position</button>
-                    <button id="dragTitles">Drag and Drop Titles</button>
-                    <button id="addParagraphUp">Add Text Area Above Chart</button>
-                    <button id="addParagraphDown">Add Text Area Below Chart</button>
-                    <button id="addOverallTitle">Add Main Title</button><br />
-                    <div class="chartTypeRadioButtons">
-                        <input type="radio" name="chartType" value="column">Column<br />
-                        <input type="radio" name="chartType" value="line">Line<br />
-                        <input type="radio" name="chartType" value="points">Points<br />
-                        <input type="radio" name="chartType" value="area">Area<br />
+                    <div>
+                        <img data-charttype="column" class="chartTypeImages" src="img/column.png" />
+                        <img data-charttype="line" class="chartTypeImages" src="img/line.png" />
+                        <img data-charttype="points" class="chartTypeImages" src="img/points.png" />
+                        <img data-charttype="area" class="chartTypeImages" src="img/area.png" />
+                    </div>
+
+                    <div id="mainButtons" style="position:relative;">
+
+                      <div style="text-align:left;position:absolute;top:-0.9em;background:#fff;font-weight:bold;">Options</div>
+                      <div style="text-align:left;position:absolute;top:-1.2em;right:1em;background:#fff;font-size:0.7em;"><a href="#" id="tooltipsToggle">Turn Tooltips On</a></div>
+                      <a class="tooltip" title="stack columns (only for multiseries data)">
+                          <img class="chartOptions stacked tooltip" title="" src="img/stacked.png" />
+                      </a>
+                      <a class="tooltip" title="side-by-side columns (only for multiseries data))">
+                          <img class="chartOptions unstacked tooltip chartTypeSelected" title="" src="img/unstacked.png" />
+                      </a>
+
+                      <a class="tooltip" title="flip data so that the xaxis becomes the legend and vice versa.">
+                          <img class="chartOptions flip tooltip" title="" src="img/flipdata.png" />
+                      </a>
+                      <a class="tooltip" title="move legend position">
+                          <img class="chartOptions legendmove tooltip" title="" src="img/legendmove.png" />
+                      </a>
+                      <a class="tooltip" title="rotate x-axis labels">
+                          <img class="chartOptions rotatelabels tooltip" title="" src="img/rotatelabels.png" />
+                      </a>
+                      <a class="tooltip" title="drag and drop chart titles (x-axis, y-axis and main chart title)">
+                          <img class="chartOptions dragdroptitles tooltip" title="" src="img/dragdroptitle.png" />
+                      </a>
+                      <a class="tooltip" title="insert text paragraph above chart">
+                          <img class="chartOptions textabove tooltip" title="" src="img/textabove.png" />
+                      </a>
+                      <a class="tooltip" title="insert text paragraph below chart">
+                          <img class="chartOptions textbelow tooltip" title="" src="img/textbelow.png" />
+                      </a>
+                      <a class="tooltip" title="insert main title at top of page">
+                          <img class="chartOptions maintitle tooltip" title="" src="img/maintitle.png" />
+                      </a>
+                      <span id="barSelectedButtons" style="display:none;">
+                        <a class="tooltip" title="increase column width">
+                          <img class="chartOptions barwidthplus" src="img/barwidthplus.png" />
+                        </a>
+                        <a class="tooltip" title="decrease column width">
+                          <img class="chartOptions barwidthminus" src="img/barwidthminus.png" />
+                        </a>
+                      </span>
+
                     </div>
 
                     <div class="editTitles">
@@ -71,10 +96,10 @@
                     </div>
                   </section>
                   <section id="a4area">
-                    <div id="overallTitleArea" ></div>
+                    <div id="overallTitleArea" style="padding-top:3em;"></div>
                     <div id="textDescriptionArea"></div>
-                    <div>
-                        <h2 id="mainTitle" style="display:none;"></h2>
+                    <div id="mainTitleContainer">
+                        <h2 id="mainTitle" style="display:none;z-index:20;"></h2>
                     </div>
                     <div id="placeholder"></div>
                     <div id="textDescriptionArea2">
@@ -101,7 +126,6 @@
         <script type="text/javascript" src="js/vendor/jquery.draggable.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.flot.tickrotor.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.flot.axislabels.js"></script>
-
         <script src="js/main.js"></script>
 
         <!-- <script>

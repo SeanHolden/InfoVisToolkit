@@ -74,18 +74,18 @@ body {
    =================== */
 
 .header-container {
-    border-bottom: 20px solid #e44d26;
+    border-bottom: 20px solid #05316D;
 }
 
 .footer-container,
 .main aside {
-    border-top: 20px solid #e44d26;
+    border-top: 20px solid #05316D;
 }
 
 .header-container,
 .footer-container,
 .main aside {
-    background: #f16529;
+    background: #0F4FA8;
 }
 
 .title {
@@ -111,7 +111,7 @@ nav a {
     font-weight: bold;
 
     color: white;
-    background: #e44d26;
+    background: #05316D;
 }
 
 nav a:hover,
@@ -254,7 +254,7 @@ button:active {
 #a4area{
   text-align:center;
   width:80%;
-  margin:auto;
+  margin:3em auto auto;
   -webkit-box-shadow: 2px 0 7px rgba(0,0,0,1);
   -moz-box-shadow: 2px 0 7px rgba(0,0,0,1);
   box-shadow: 2px 0 7px rgba(0,0,0,1);
@@ -274,7 +274,74 @@ button:active {
   font-weight:normal;
 }
 
+.chartTypeImages{
+  width:4em;
+  border:1px solid black;
+  cursor: pointer;
+  margin: 3em 1.5em 3em;
+}
 
+.chartTypeSelected{
+  -webkit-box-shadow: 0px 0px 15px 5px rgba(35, 154, 44, 0.9);
+  -moz-box-shadow: 0px 0px 15px 5px rgba(35, 154, 44, 0.9);
+  box-shadow: 0px 0px 15px 5px rgba(35, 154, 44, 0.9);
+}
+
+.chartOptions{
+  width:3em;
+  border:1px solid rgba(0, 0, 0, 1);
+  border-radius: 1em;
+  cursor:pointer;
+}
+
+header.wrapper{
+  text-align: center;
+}
+
+footer.wrapper h3{
+  text-align:center;
+}
+
+#mainButtons{
+  border:1px solid black;
+  display:inline-block;
+  padding:2em 1em 1em 1em;
+  border-radius:0.5em;
+}
+
+.tooltip{
+    display: inline;
+    position: relative;
+    color:blue;
+}
+
+.tooltip:hover:after{
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    bottom: 26px;
+    color: #fff;
+    content: attr(title);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 220px;
+}
+
+.tooltip:hover:before{
+    border: solid;
+    border-color: #333 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 20px;
+    content: "";
+    left: 50%;
+    position: absolute;
+    z-index: 99;
+}
+/*.stacked, .unstacked, .flip, .legendmove,.rotatelabels, .dragdroptitles, .barwidthplus,.barwidthminus{
+  
+}*/
 
 
 
@@ -333,10 +400,6 @@ button:active {
 /* ============
     WIDE: Menu
    ============ */
-
-    .title {
-        float: left;
-    }
 
     nav {
         float: right;
@@ -515,14 +578,19 @@ button:active {
     }
 
     #textDescriptionArea p{
-      width:19cm;
+/*      width:19cm;
       margin-left:-3cm;
-      font-size:0.8em;
+      font-size:0.8em;*/
       /*margin:right:100cm;*/
+      /*width:100%;*/
     }
 
-/*    #a4area{
+    #a4area{
+      width:100%;
+    }
+
+    #placeholder{
       width:80%;
-    }*/
+    }
 
 }

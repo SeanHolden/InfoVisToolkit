@@ -32,7 +32,8 @@ var settings = {
   mainTitle:{
     value: $('#editMainTitle input').val()
   },
-  draggableTitles: false
+  draggableTitles: false,
+  tooltips: true
 };
 
 var defaultSettings = settings;
@@ -41,18 +42,51 @@ $(function(){
   checkFileApiSupport();
   // Make textarea automatically increase in size when data is entered.
   $('.infovis-area textarea').autogrow();
-  initReloadDataButton();
-  initStackToggleButton();
-  initBarWidthAdjust();
-  initFlipDataButton();
-  initChartTypeRadioButtons();
+  // initReloadDataButton();
+  // initStackToggleButton();
+  stackedOrUnstackedButtons();
+  // initBarWidthAdjust();
+  // initFlipDataButton();
+  // initChartTypeRadioButtons();
   initResizeWindow();
-  initMoveLegendButton();
-  initRotateButton();
-  initDragTitles();
+  // initMoveLegendButton();
+  // initRotateButton();
+  // initDragTitles();
+  tooltipsToggle();
   addParagraphButtons();
   addOverallTitleButton();
+  chartTypeImagesClickEvent();
+  documentclickEvent();
 });
+
+function documentclickEvent(){
+  $(document).click(function(){
+    var newTextValue = $('#overallTitleArea input').val();
+    $('#mainOverallTitle').html(newTextValue).show();
+    $('#overallTitleArea input').remove();
+    var paragraphText = $('#paragraphTextArea').val();
+    $('.textAboveChart').unbind(); // stop click events stacking
+    $('#paragraphTextArea').unbind();
+    $('#paragraphTextArea').replaceWith('<p class=\"textAboveChart\">'+paragraphText+'</p>');
+    addclickEventToParagraphs();
+  });
+}
+
+function tooltipsToggle(){
+  $('#tooltipsToggle').click(function(){
+    if (settings.tooltips === true){
+      $('#mainButtons a').removeClass('tooltip');
+      $('#tooltipsToggle').html("Turn Tooltips On");
+      settings.tooltips = false;
+    }else{
+      $('#mainButtons a').addClass('tooltip');
+      $('#tooltipsToggle').removeClass('tooltip');
+      $('#tooltipsToggle').html("Turn Tooltips Off");
+      settings.tooltips = true;
+    }
+    return false;
+  });
+}
 
 function checkFileApiSupport(){
   // Check for the various File API support.
@@ -156,34 +190,9 @@ function editMainTitle(){
   });
 }
 
-// $( "td").click( function(event) {
-//   $("#divId").css( {position:"absolute", top:event.pageY, left: event.pageX});
-// });
-
-
-
-function initRotateButton(){
-  $('#rotate-xaxis-titles').click(function(){
-    if(settings.xaxis.rotateTicks === false){
-      settings.xaxis.rotateTicks = 135;
-      createChart();
-    }else{
-      settings.xaxis.rotateTicks = false
-      createChart();
-    }
-  });
-}
-
 // Redraw the chart when window is resized.
 function initResizeWindow(){
   $(window).resize(function() {
-    createChart();
-  });
-}
-
-function initReloadDataButton(){
-  // Initialize enter data button click event
-  $('#reload').click(function(){
     createChart();
   });
 }
@@ -201,8 +210,27 @@ function initStackToggleButton(){
   });
 }
 
-function initMoveLegendButton(){
-  $('#move-legend').click(function(){
+function stackedOrUnstackedButtons(){
+  $('.stacked').click(function(){
+    $(this).addClass('chartTypeSelected');
+    $('.unstacked').removeClass('chartTypeSelected');
+    settings.stack = 1;
+    settings.bars.order = null;
+    createChart();
+  });
+  $('.unstacked').click(function(){
+    $(this).addClass('chartTypeSelected');
+    $('.stacked').removeClass('chartTypeSelected');
+    settings.stack = null;
+    settings.bars.order = 1;
+    createChart();
+  });
+  $('.flip').click(function(){
+    toggleFlipDataValue(function(){
+      createChart();
+    });
+  });
+  $('.legendmove').click(function(){
     switch(settings.legend.position){
       case 'ne':
         settings.legend.position = 'se';
@@ -222,16 +250,24 @@ function initMoveLegendButton(){
         break;
     }
   });
-}
-
-function initDragTitles(){
-  $('#dragTitles').click(function(){
+  $('.rotatelabels').click(function(){
+    if(settings.xaxis.rotateTicks === false){
+      settings.xaxis.rotateTicks = 135;
+      $('.rotatelabels').addClass('chartTypeSelected');
+      createChart();
+    }else{
+      settings.xaxis.rotateTicks = false
+      $('.rotatelabels').removeClass('chartTypeSelected');
+      createChart();
+    }
+  });
+  $('.dragdroptitles').click(function(){
     if(settings.draggableTitles == false){
       $('.yaxisLabel').unbind().drags();
       $('.xaxisLabel').unbind().drags();
       $('#mainTitle').unbind().drags();
       settings.draggableTitles = true;
-      $('#dragTitles').html('Finish Dragging Titles').css('background','red');
+      $('.dragdroptitles').addClass('chartTypeSelected');
     }else{
       $('.yaxisLabel').unbind().css('cursor','initial');
       $('.xaxisLabel').unbind().css('cursor','initial');
@@ -239,104 +275,15 @@ function initDragTitles(){
       initXandYAxisLabelButton('x');
       initXandYAxisLabelButton('y');
       editMainTitle();
-      $('#dragTitles').html('Drag and Drop Titles').attr('style','');
+      $('.dragdroptitles').removeClass('chartTypeSelected');
       settings.draggableTitles = false;
     }
   });
-}
-
-function addParagraphButtons(){
-  var loremIpsumText = "<p>Lorem ipsum dolor sit amet, \
-                                    consectetur adipiscing elit. Vestibulum \
-                                    tortor libero, egestas ac sodales et, \
-                                    vehicula eget erat. Nullam iaculis congue \
-                                    molestie. Suspendisse potenti. Proin ornare \
-                                    auctor ligula, in consectetur metus. Praesent \
-                                    fermentum ultricies tortor, non eleifend lacus \
-                                    vehicula tempor. Praesent suscipit quam a dolor \
-                                    gravida suscipit. Suspendisse vel mi sit amet \
-                                    metus consectetur iaculis. Duis tempus sagittis \
-                                    est, a facilisis augue imperdiet faucibus. In \
-                                    quis eros et metus ullamcorper elementum et \
-                                    sit amet est. Cras cursus condimentum dolor \
-                                    a ullamcorper.</p>"
-  $('#addParagraphUp').click(function(){
-    addParagraphAboveChart(loremIpsumText);
-  });
-    $('#addParagraphDown').click(function(){
-    addParagraphBelowChart(loremIpsumText);
-  });
-}
-
-function addParagraphAboveChart(loremIpsumText){
-  $('#textDescriptionArea').append(loremIpsumText);
-}
-
-function addParagraphBelowChart(loremIpsumText){
-  $('#textDescriptionArea2').append(loremIpsumText);
-}
-
-function addOverallTitleButton(){
-  $('#addOverallTitle').click(function(){
-    var area = $('#overallTitleArea');
-    if(area.children().length === 0){
-      area.append("<h1 style=\"padding-top:2em;\">Main Title</h1>");
-    }
-  });
-}
-
-function initChartTypeRadioButtons(){
-  $('input[name=chartType]').click(function(){
-    getRadioButtonValue(function(radioValue){
-      switch(radioValue){
-        case 'column':
-          settings.bars.show = 1;
-          settings.lines.show = 0;
-          settings.points.show = 0;
-          settings.lines.fill = 0;
-          createChart();
-          break;
-        case 'line':
-          settings.bars.show = 0;
-          settings.lines.show = 1;
-          settings.points.show = 0;
-          settings.lines.fill = 0;
-          createChart();
-          break;
-        case 'points':
-          settings.bars.show = 0;
-          settings.lines.show = 0;
-          settings.points.show = 1;
-          settings.lines.fill = 0;
-          createChart();
-          break;
-        case 'area':
-          settings.bars.show = 0;
-          settings.lines.show = 1;
-          settings.points.show = 0;
-          settings.lines.fill = 1;
-          createChart();
-          break;
-      }
-    });
-  });
-}
-
-function getRadioButtonValue(callback){
-  var elements = document.getElementsByName("chartType");
-  for (var i=0; i<elements.length; i++){
-    if (elements[i].checked){
-      callback(elements[i].value);
-    }
-  }
-}
-
-function initBarWidthAdjust(){
-  $('#bar-width-plus').click(function(){
-    settings.bars.barWidth =  settings.bars.barWidth + 0.05;
+  $('.barwidthplus').click(function(){
+    settings.bars.barWidth = settings.bars.barWidth + 0.05;
     createChart();
   });
-  $('#bar-width-minus').click(function(){
+  $('.barwidthminus').click(function(){
     if(settings.bars.barWidth>=0.01){
       settings.bars.barWidth =  settings.bars.barWidth - 0.05;
     };
@@ -344,11 +291,115 @@ function initBarWidthAdjust(){
   });
 }
 
-function initFlipDataButton(){
-  $('#flip-data').click(function(){
-    toggleFlipDataValue(function(){
-      createChart();
+
+$('#dragTitles').click(function(){
+  if(settings.draggableTitles == false){
+    $('.yaxisLabel').unbind().drags();
+    $('.xaxisLabel').unbind().drags();
+    $('#mainTitle').unbind().drags();
+    settings.draggableTitles = true;
+    $('#dragTitles').html('Finish Dragging Titles').css('background','red');
+  }else{
+    $('.yaxisLabel').unbind().css('cursor','initial');
+    $('.xaxisLabel').unbind().css('cursor','initial');
+    $('#mainTitle').unbind().css('cursor','initial');
+    initXandYAxisLabelButton('x');
+    initXandYAxisLabelButton('y');
+    editMainTitle();
+    $('#dragTitles').html('Drag and Drop Titles').attr('style','');
+    settings.draggableTitles = false;
+  }
+});
+
+function addParagraphButtons(){
+  var loremIpsumText = "<p class=\"textAboveChart\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tortor libero, egestas ac sodales et, vehicula eget erat. Nullam iaculis congue molestie. Suspendisse potenti. Proin ornare auctor ligula, in consectetur metus. Praesent fermentum ultricies tortor, non eleifend lacus vehicula tempor. Praesent suscipit quam a dolor gravida suscipit. Suspendisse vel mi sit amet metus consectetur iaculis. Duis tempus sagittis est, a facilisis augue imperdiet faucibus. In quis eros et metus ullamcorper elementum et sit amet est. Cras cursus condimentum dolor a ullamcorper.</p>"
+  $('.textabove').click(function(event){
+    $('#textDescriptionArea').append(loremIpsumText);
+    addclickEventToParagraphs();
+  });
+  $('.textbelow').click(function(event){
+    $('#textDescriptionArea2').append(loremIpsumText);
+    addclickEventToParagraphs();
+  });
+}
+
+function addclickEventToParagraphs(){
+  $('.textAboveChart').click(function(event){
+    console.log('clicked');
+    var paragraphText = $(this).html();
+    $(this).replaceWith('<textarea id=\"paragraphTextArea\">'+paragraphText+'</textarea>');
+    $('#paragraphTextArea').click(function(){
+      return false;
     });
+    event.stopPropagation();
+  });
+}
+
+function addOverallTitleButton(){
+  $('.maintitle').click(function(){
+    var area = $('#overallTitleArea');
+    if(area.children().length === 0){
+      var newTitle = $("<h1 style=\"display:inline;\" id=\"mainOverallTitle\">Main Title</h1>");
+      area.append(newTitle);
+      appendClickFunctionToMainTitle();
+    }
+  });
+}
+
+function appendClickFunctionToMainTitle(){
+  $('#mainOverallTitle').click(function(event){
+    var mainTitleValue = $(this).html();
+    $('#mainOverallTitle').hide();
+    $('#overallTitleArea').append('<input id=\"overallTitleTextArea\" type=\"text\" value=\"'+mainTitleValue+'\" />');
+    $('#overallTitleTextArea').click(function(){
+      return false;
+    });
+    event.stopPropagation();
+  });
+}
+
+function chartTypeImagesClickEvent(){
+  // chartTypeSelected
+  $('.chartTypeImages').click(function(){
+    $('.chartTypeImages').removeClass('chartTypeSelected');
+    $(this).addClass('chartTypeSelected');
+    var radioValue = $(this).data('charttype');
+    // console.log(radioValue);
+    // initChartTypeRadioButtons(radioValue);
+    switch(radioValue){
+      case 'column':
+        settings.bars.show = 1;
+        settings.lines.show = 0;
+        settings.points.show = 0;
+        settings.lines.fill = 0;
+        $('#barSelectedButtons').show();
+        createChart();
+        break;
+      case 'line':
+        settings.bars.show = 0;
+        settings.lines.show = 1;
+        settings.points.show = 0;
+        settings.lines.fill = 0;
+        $('#barSelectedButtons').hide();
+        createChart();
+        break;
+      case 'points':
+        settings.bars.show = 0;
+        settings.lines.show = 0;
+        settings.points.show = 1;
+        settings.lines.fill = 0;
+        $('#barSelectedButtons').hide();
+        createChart();
+        break;
+      case 'area':
+        settings.bars.show = 0;
+        settings.lines.show = 1;
+        settings.points.show = 0;
+        settings.lines.fill = 1;
+        $('#barSelectedButtons').hide();
+        createChart();
+        break;
+    }
   });
 }
 
