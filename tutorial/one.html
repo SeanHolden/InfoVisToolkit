@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Information Visualization Toolkit</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="../css/normalize.min.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="../css/tutorial.css">
+
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="header-container">
+            <header class="wrapper clearfix">
+                <h1 class="title">Information Visualization Toolkit</h1>
+            </header>
+        </div>
+
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+                <section class="tutorial-main-area">
+                  <div class="heading">
+                    <h1>Tutorial one:</h1>
+                    <h2>Intoduction and Creation of a Basic Chart</h2>
+                  </div>
+                  <div class="content">
+                    <h3>1: Setting up the file structure</h3>
+                    <p>Before we begin writing any code, we need to ensure our file structure is correctly set up.</p>
+
+                    <p>Firstly create a <em>new directory</em>. We can call it: <em>ChartApplication</em>.</p>
+
+                    <p>Navigate into this directory and create three more directories inside. Name them <em>css</em>, <em>js</em> and <em>img</em>, respectively. You may have guessed already, but these directories will be used to hold your stylesheets, javascript and images.</p>
+
+                    <p>Next we want to create our main HTML file. We will call it <em>index.html</em>. This should be placed alongside your other three directories.</p>
+
+                    <p>So far your file structure should look something like this:</p>
+
+                    <pre>
+                    ChartApplication/
+                           |
+                           |----css/
+                           |----img/
+                           |----js/
+                           |----index.html
+                    </pre>
+
+                    <p>Inside your <em>css</em> directory, create a new file. Call it <em>main.css</em>. This will be our main stylesheet we can use to style our application.</p>
+
+                    <p>Next, create a new file inside your <em>js</em> directory. Sticking with the same style as with <em>css</em>, we will call this one <em>main.js</em>. Alongside this new file, create a new directory called <em>libraries</em>. This is where we will store all third party libraries that will make our job easier.</p>
+
+                    <p>Next up we need to download our first library, <em>jQuery</em>. At the time of writing this tutorial, the latest stable version is 1.11.0 and this is the version that was used to create the main application. <a href="http://code.jquery.com/jquery-1.11.0.min.js">You can get it directly from here</a> or simply go to <a href="http://jquery.com/download/">jquery.com/download</a> and click on your preferred version. Save this as a new file inside your newly created <em>libraries</em> directory. Call it <em>jquery-1.11.0.js</em> (or if you are using a newer version, ensure to name it accordingly).</p>
+
+                    <p>You structure should look like the following:</p>
+
+                    <pre>
+                    ChartApplication/
+                           |
+                           |----css/
+                           |      |
+                           |      |----main.css
+                           |
+                           |----img/
+                           |
+                           |----js/
+                           |      |----main.js
+                           |      |----libraries/
+                           |                   |----jquery-1.11.0.js
+                           |
+                           |----index.html
+                    </pre>
+
+                    <h3>2: Preparing the HTML foundations</h3>
+                  </div>
+                </section>
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+
+        <div class="footer-container">
+            <footer class="wrapper">
+                <h3>Sean Holden - University of Leeds</h3>
+            </footer>
+        </div>
+
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+
+    </body>
+</html>

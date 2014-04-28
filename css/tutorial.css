@@ -1,0 +1,21 @@
+.tutorial-main-area{
+  border:2px ridge black;
+  padding:0 4em 0 4em;
+  border-radius:1em;
+}
+
+.heading h1, .heading h2{
+  text-align: center;
+}
+
+.heading{
+  margin-bottom:4em;
+}
+
+div.main-container > div > section > p{
+  font-weight:normal;
+}
+
+.content{
+  margin-bottom:4em;
+}
