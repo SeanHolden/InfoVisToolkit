@@ -13,8 +13,9 @@
         <link rel="stylesheet" href="../css/normalize.min.css">
         <link rel="stylesheet" href="../css/main.css">
         <link rel="stylesheet" href="../css/tutorial.css">
+        <link rel="stylesheet" href="../css/snippet.min.css">
 
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="../js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -79,8 +80,238 @@
                            |
                            |----index.html
                     </pre>
-
+                    <hr />
                     <h3>2: Preparing the HTML foundations</h3>
+                    <p>Lets get started by adding some HTML code into <em>index.html</em>.</p>
+                    <p>The following code should be written (or copy and pasted) directly into <em>index.html</em>.</p>
+
+
+<pre class="htmlSnippet">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Information Visualization Toolkit&lt;/title&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;link rel="stylesheet" href="css/main.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- Content to go here --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+                    
+
+                    <p>Line 01 is declaring this to be an HTML5 document. Inside the <em>head</em> tags we have the some <em>meta</em> tags. The <em>meta</em> tag on line 04 is simply stating that we want to use utf-8 character set, and line 06 is to ensure a nicer mobile experience by setting the width to the width of the device.
+                    <br />We have also set the page title and included a link to our <em>main.css</em> file which means that when we add some styles they will take effect straight away.</p>
+
+                    <p>At this point we can add our JavaScript files <em>main.js</em> and our library <em>jquery-1.11.0.js</em>.
+                    <br />Add the following script elements inside the <em>body</em> tags:
+                    </p>
+
+<pre class="htmlSnippet">
+  ...
+  &lt;body&gt;
+    &lt;!-- Content to go here --&gt;
+    &lt;script type="text/javascript" src="js/libraries/jquery-1.11.0.min.js"&gt;
+    &lt;/script&gt;
+    &lt;script type="text/javascript" src="js/main.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+  ...</pre>
+
+                    <p>We have just linked our JavaScript files to our HTML document. These scripts are placed at the bottom of the document as the page is read by the browser from top to bottom. Placing JavaScript files near the top can result in slower page loadig times.</p>
+                    <p>At this point we are almost ready to start creating a chart. But first we need to gather a few more libraries. This time, we need libraries that are made for plotting charts.</p>
+
+                    <hr />
+
+                    <h3>3: Acquiring the necessary libraries</h3>
+                    <p>We already have the <em>jQuery</em> library, now it is time to grab a plotting library. Creating a chart from scratch would be a tedious and long process. There are many libraries out there that already do this hard work for us. The one used for this application will be <em>FlotCharts</em> which is available at <a href="http://www.flotcharts.org/">http://www.flotcharts.org/</a>.</p>
+
+                    <p>Navigate to <a href="http://www.flotcharts.org/">http://www.flotcharts.org/</a> and download the latest version. It will come in a zip file.</p>
+
+                    <p>Unzip this file. You will notice that there are many files inside, but there is no need to be overwhelmed. We only actually need two of these files at this point.</p>
+
+                    <p>Find <em>flot/jquery.flot.min.js</em> and <em>flot/jquery.flot.stack.min.js</em>. The former of these files is the core library and the latter is an add-on that adds stacking functionality to a created chart.</p>
+
+                    <p>Once these files are located, copy them into your <em>js/libraries</em> directory.</p>
+
+                    <p>
+                      Now we can link to them from our <em>index.html</em> file as we did with our other JavaScript files. Place the script tags between your <em>jQuery</em> library and <em>main.js</em>. The bottom of your <em>body</em> tags should look like the following:
+                    </p>
+
+<pre class="htmlSnippet">
+  ...
+  &lt;body&gt;
+    &lt;!-- Content to go here --&gt;
+    &lt;script type="text/javascript" src="js/libraries/jquery-1.11.0.min.js"&gt;
+    &lt;/script&gt;
+    &lt;script type="text/javascript" src="js/libraries/jquery.flot.min.js"&gt;
+    &lt;/script&gt;
+    &lt;script type="text/javascript" src="js/libraries/jquery.flot.stack.min.js"&gt;
+    &lt;/script&gt;
+    &lt;script type="text/javascript" src="js/main.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+  ...</pre>
+
+                    <p>Now we are pretty much set up. We have our required libraries, we have linked them to our HTML document as well as our own JavaScript file <em>main.js</em> and our stylesheet <em>main.css</em>. The next section will go into plotting your first chart.</p>
+
+                    <hr />
+
+                    <h3>4: Plotting your first chart</h3>
+
+                    <p>
+                      First, go back into your <em>index.html</em> file and add the following line into your <em>body</em> element.<br />
+                      <em>Note:</em> Ensure that this line is placed <strong>above</strong> the <em>script</em> elements. The <em>script</em> elements must always be at the bottom of the <em>body</em>.
+                    </p>
+
+<pre class="htmlSnippet">
+  ...
+  &lt;body&gt;
+    &lt;div id="placeholder"&gt;&lt;/div&gt;
+    ...
+  &lt;/body&gt;
+  ...</pre>
+
+                    <p>
+                      The <em>div</em> element that we have just inserted will be the container for our chart. The whole chart will be generated via JavaScript and will be placed inside this <em>div</em> element. We have given it the <em>id</em> of "placeholder". This can be renamed to anything, but this <em>id</em> will be used in our JavaScript code to reference this element, so ensure it is consistent throughout your code.
+                    </p>
+
+                    <p>
+                      At this point, we need to set the height and width of our chart area. We can do this in our <em>main.css</em> file. Open this stylesheet and insert the following code:
+                    </p>
+
+<pre class="cssSnippet">
+  #placeholder{
+    width:600px;
+    height:300px;
+    border: 2px solid black;
+  }
+</pre>
+                    <p>
+                      Notice that as well as height and width, we have set a border. This is simply so that we can see our chart area before our chart is even placed inside it.
+                    </p>
+                    <p>If you open <em>index.html</em> at this point in your web browser, you should see a black rectangular box with a width of 600 pixels and a height of 300 pixels. It should look like this:</p>
+                    
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/placeholderBorder.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+
+                    <p><strong>Now for the fun part!</strong> Open up <em>main.js</em>. We are ready to write some JavaScript and get our first chart displaying.</p>
+
+                    <p>First of all, we need to write some code that will display the chart as soon as our HTML document has loaded in the browser. Fortunately, <em>jQuery</em> makes this easy for us. Simply type the following couple of lines.</p>
+
+<pre class="jsSnippet">
+  $(function(){
+    // code will go here
+  });
+</pre>
+
+                    <p>This is essentially a jQuery helper function that says "any code inside these brackets will run whent he document loads".</p>
+
+                    <p>Now lets add a line of code to set us up to display our chart. In place of the comment that says: "<code>// code will go here</code>", insert the following line:</p>
+
+<pre class="jsSnippet">
+  $(function(){
+    displayChart(); // <-- insert this line
+  });
+</pre>
+
+
+                    <p>This will not work just yet, as the browser still does not know what <code>displayChart()</code> means. Lets create this function so that it can be ran as expected.</p>
+
+                    <p>Edit the code to become the following:</p>
+
+<pre class="jsSnippet">
+  $(function(){
+    displayChart();
+  });
+  &nbsp;
+  function displayChart(){
+    // x and y coordinates:
+    var values = [ [0, 3], [2, 8], [4, 5], [6, 13], [8,0], [10,5] ];
+    // flotcharts function:
+    $.plot("#placeholder", [ values ]);
+  }
+
+</pre>
+
+                      <p>Now hit refresh in your browser!</p> 
+                      <p>All going well, you should see a line chart displayed with the X and Y values taken from the "data" variable in the code snippet above.</p>
+                      <p>You might want to remove the border in your <em>main.css</em> at this stage, to make it look a little cleaner.</p>
+                      <p>Your chart should look something like this:</p>
+                      <div style="text-align:center;">
+                        <img src="../img/tutorial/firstChart.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                      </div>
+                      
+                      <p><strong>Congratulations!</strong> You have just created your first chart in HTML5!</p>
+
+                      <hr />
+
+                      <h3>5: Change Chart Type</h3>
+
+                      <p>Now we have a line chart. But what if we want to display a column chart? or a points chart? or multiple chart types at once?</p>
+
+                      <p>Going back to our JavaScript code in <em>main.js</em>, we need to make an edit to our <code>$.plot</code> line inside the <code>displayChart()</code> function.</p>
+
+                      <p>By default, the chart will display a line chart. In order to change this, we need to add some options into our code.</p>
+
+<pre class="jsSnippet">
+  ...
+&nbsp;
+function displayChart(){
+  // x and y coordinates:
+  var values = [ [0, 3], [2, 8], [4, 5], [6, 13], [8,0], [10,5] ];
+    $.plot("#placeholder", [{
+      // adding extra options:
+      data: values,
+      bars: { show: true }
+    }]);
+}
+
+</pre>
+
+                    <p><strong>What have we just done here?</strong><br />Well, the <code>$.plot</code> function takes an array as its second argument (the first being the id of the HTML element). Initially we passed in the <code>value</code> variable which already contained an array of arrays. As we did not specify anything other than this, the library used its default values, namely choosing to display a line chart.</p>
+
+                    <p>If, instead of entering the <code>value</code> variable as an argument, we enter it as part of an object, then we can override these default values. This may sound confusing, but if you study the code snippet above, you can see that two "options" have been set here. One being the <code>data</code> option, which we set as our <code>value</code> variable. Next is the <code>bars</code> option, which accepts multiple options itself. One of which is <code>show</code>, which in this case we have set to true.</p>
+
+                    <p>Reload the browser page again. You should see that the chart is now a column chart!</p>
+
+                    <p>To expand on this further, how about we add some extra data to the chart, in the form of a line chart with points.</p>
+
+                    <p>Edit your <code>displayChart()</code> function to look like the following:</p>
+
+<pre class="jsSnippet">
+  ...
+&nbsp;
+function displayChart(){
+    var values1 = [ [0, 3], [2, 8], [4, 5], [6, 13], [8,0], [10,5] ];
+    var values2 = [ [0, 7], [3, 4], [5, 1], [7, 2], [9,5], [11,10] ];
+
+    $.plot("#placeholder", [{
+      data: values1,
+      bars: { show: true }
+    },
+    {
+      data: values2,
+      lines: { show: true },
+      points: { show: true }
+    }]);
+}
+
+</pre>
+                 
+                    <p>Here, you may notice that we now have two <code>values</code> variables, named <code>values1</code> and <code>values2</code>. Inside the <code>$.plot</code> function, we now have an array containing two objects. The first object is to display the column chart as before. The second object, having <code>lines</code> and <code>points</code> values set to true, will display a line chart with points.</p>
+
+                    <p><strong>Go ahead and refresh the page</strong>. You should have a chart that looks like the following.</p>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/columnLinesPoints.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+
+                    <p><strong>Congratulations!</strong> You have completed this tutorial!</p>
+
+                    <p>Before moving on, make sure you understand all the code you have written. Read each line and ensure that it makes sense to you. Even if you are new to JavaScript, if you ignore all the braces, brackets and semi-colons, the code should still make some kind of sense to you. You may not be able to write it independantly at this point, but at least you can understand how the code is working.</p>
+                    <p>This is only touching the surface of what this library can do. If you want to play some more with FlotCharts, you can take a look at the documentation on their website at <a href="http://www.flotcharts.org/">http://www.flotcharts.org/</a>.</p>
+
                   </div>
                 </section>
 
@@ -94,7 +325,14 @@
         </div>
 
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+        <script src="../js/vendor/snippet.min.js"></script>
+        <script type="text/javascript">
+          $(".htmlSnippet").snippet("html",{style:"ide-eclipse",transparent:true,showNum:false});
+          $(".cssSnippet").snippet("css",{style:"ide-eclipse",transparent:true,showNum:false});
+          $(".jsSnippet").snippet("javascript",{style:"ide-eclipse",transparent:true,showNum:false});
+
+        </script>
 
     </body>
 </html>
