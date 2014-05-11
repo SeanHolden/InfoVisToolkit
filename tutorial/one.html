@@ -32,56 +32,63 @@
             <div class="main wrapper clearfix">
                 <section class="tutorial-main-area">
                   <div class="heading">
+                    <div style="text-align:right;">
+                      <a href="two.html" >&gt;&gt; Forward to tutorial 2</a>
+                    </div>
                     <h1>Tutorial one:</h1>
                     <h2>Intoduction and Creation of a Basic Chart</h2>
+                    <h3 style="text-align:center;"><a href="https://github.com/SeanHolden/chartCreationDemo">See completed code</a></h3>
                   </div>
                   <div class="content">
-                    <h3>1: Setting up the file structure</h3>
-                    <p>Before we begin writing any code, we need to ensure our file structure is correctly set up.</p>
+                    <h3>1: Setting up the file structure <a href="#" id="toggletutorial1section1" style="float:right;">show</a></h3>
+                    <section id="tutorial1section1">
+                      <p>Before we begin writing any code, we need to ensure our file structure is correctly set up.</p>
 
-                    <p>Firstly create a <em>new directory</em>. We can call it: <em>ChartApplication</em>.</p>
+                      <p>Firstly create a <em>new directory</em>. We can call it: <em>ChartApplication</em>.</p>
 
-                    <p>Navigate into this directory and create three more directories inside. Name them <em>css</em>, <em>js</em> and <em>img</em>, respectively. You may have guessed already, but these directories will be used to hold your stylesheets, javascript and images.</p>
+                      <p>Navigate into this directory and create three more directories inside. Name them <em>css</em>, <em>js</em> and <em>img</em>, respectively. You may have guessed already, but these directories will be used to hold your stylesheets, javascript and images.</p>
 
-                    <p>Next we want to create our main HTML file. We will call it <em>index.html</em>. This should be placed alongside your other three directories.</p>
+                      <p>Next we want to create our main HTML file. We will call it <em>index.html</em>. This should be placed alongside your other three directories.</p>
 
-                    <p>So far your file structure should look something like this:</p>
+                      <p>So far your file structure should look something like this:</p>
 
-                    <pre>
-                    ChartApplication/
-                           |
-                           |----css/
-                           |----img/
-                           |----js/
-                           |----index.html
-                    </pre>
+                      <pre>
+                      ChartApplication/
+                             |
+                             |----css/
+                             |----img/
+                             |----js/
+                             |----index.html
+                      </pre>
 
-                    <p>Inside your <em>css</em> directory, create a new file. Call it <em>main.css</em>. This will be our main stylesheet we can use to style our application.</p>
+                      <p>Inside your <em>css</em> directory, create a new file. Call it <em>main.css</em>. This will be our main stylesheet we can use to style our application.</p>
 
-                    <p>Next, create a new file inside your <em>js</em> directory. Sticking with the same style as with <em>css</em>, we will call this one <em>main.js</em>. Alongside this new file, create a new directory called <em>libraries</em>. This is where we will store all third party libraries that will make our job easier.</p>
+                      <p>Next, create a new file inside your <em>js</em> directory. Sticking with the same style as with <em>css</em>, we will call this one <em>main.js</em>. Alongside this new file, create a new directory called <em>libraries</em>. This is where we will store all third party libraries that will make our job easier.</p>
 
-                    <p>Next up we need to download our first library, <em>jQuery</em>. At the time of writing this tutorial, the latest stable version is 1.11.0 and this is the version that was used to create the main application. <a href="http://code.jquery.com/jquery-1.11.0.min.js">You can get it directly from here</a> or simply go to <a href="http://jquery.com/download/">jquery.com/download</a> and click on your preferred version. Save this as a new file inside your newly created <em>libraries</em> directory. Call it <em>jquery-1.11.0.js</em> (or if you are using a newer version, ensure to name it accordingly).</p>
+                      <p>Next up we need to download our first library, <em>jQuery</em>. At the time of writing this tutorial, the latest stable version is 1.11.0 and this is the version that was used to create the main application. <a href="http://code.jquery.com/jquery-1.11.0.min.js">You can get it directly from here</a> or simply go to <a href="http://jquery.com/download/">jquery.com/download</a> and click on your preferred version. Save this as a new file inside your newly created <em>libraries</em> directory. Call it <em>jquery-1.11.0.js</em> (or if you are using a newer version, ensure to name it accordingly).</p>
 
-                    <p>You structure should look like the following:</p>
+                      <p>You structure should look like the following:</p>
 
-                    <pre>
-                    ChartApplication/
-                           |
-                           |----css/
-                           |      |
-                           |      |----main.css
-                           |
-                           |----img/
-                           |
-                           |----js/
-                           |      |----main.js
-                           |      |----libraries/
-                           |                   |----jquery-1.11.0.js
-                           |
-                           |----index.html
-                    </pre>
+                      <pre>
+                      ChartApplication/
+                             |
+                             |----css/
+                             |      |
+                             |      |----main.css
+                             |
+                             |----img/
+                             |
+                             |----js/
+                             |      |----main.js
+                             |      |----libraries/
+                             |                   |----jquery-1.11.0.js
+                             |
+                             |----index.html
+                      </pre>
+                    </section>
                     <hr />
-                    <h3>2: Preparing the HTML foundations</h3>
+                    <h3>2: Preparing the HTML foundations <a href="#" id="toggletutorial1section2" style="float:right;">show</a></h3>
+                    <section id="tutorial1section2">
                     <p>Lets get started by adding some HTML code into <em>index.html</em>.</p>
                     <p>The following code should be written (or copy and pasted) directly into <em>index.html</em>.</p>
 
@@ -121,9 +128,11 @@
                     <p>We have just linked our JavaScript files to our HTML document. These scripts are placed at the bottom of the document as the page is read by the browser from top to bottom. Placing JavaScript files near the top can result in slower page loadig times.</p>
                     <p>At this point we are almost ready to start creating a chart. But first we need to gather a few more libraries. This time, we need libraries that are made for plotting charts.</p>
 
+                    </section>
                     <hr />
 
-                    <h3>3: Acquiring the necessary libraries</h3>
+                    <h3>3: Acquiring the necessary libraries <a href="#" style="float:right;" id="toggletutorial1section3">show</a></h3>
+                    <section id="tutorial1section3">
                     <p>We already have the <em>jQuery</em> library, now it is time to grab a plotting library. Creating a chart from scratch would be a tedious and long process. There are many libraries out there that already do this hard work for us. The one used for this application will be <em>FlotCharts</em> which is available at <a href="http://www.flotcharts.org/">http://www.flotcharts.org/</a>.</p>
 
                     <p>Navigate to <a href="http://www.flotcharts.org/">http://www.flotcharts.org/</a> and download the latest version. It will come in a zip file.</p>
@@ -153,10 +162,12 @@
   ...</pre>
 
                     <p>Now we are pretty much set up. We have our required libraries, we have linked them to our HTML document as well as our own JavaScript file <em>main.js</em> and our stylesheet <em>main.css</em>. The next section will go into plotting your first chart.</p>
+                    </section>
 
                     <hr />
 
-                    <h3>4: Plotting your first chart</h3>
+                    <h3>4: Plotting your first chart <a href="#" style="float:right;" id="toggletutorial1section4">show</a></h3>
+                    <section id="tutorial1section4">
 
                     <p>
                       First, go back into your <em>index.html</em> file and add the following line into your <em>body</em> element.<br />
@@ -243,10 +254,13 @@
                       </div>
                       
                       <p><strong>Congratulations!</strong> You have just created your first chart in HTML5!</p>
-
+                      
+                      </section>
                       <hr />
 
-                      <h3>5: Change Chart Type</h3>
+                      <h3>5: Change Chart Type <a href="#" id="toggletutorial1section5" style="float:right;">show</a></h3>
+
+                      <section id="tutorial1section5">
 
                       <p>Now we have a line chart. But what if we want to display a column chart? or a points chart? or multiple chart types at once?</p>
 
@@ -312,6 +326,8 @@ function displayChart(){
                     <p>Before moving on, make sure you understand all the code you have written. Read each line and ensure that it makes sense to you. Even if you are new to JavaScript, if you ignore all the braces, brackets and semi-colons, the code should still make some kind of sense to you. You may not be able to write it independantly at this point, but at least you can understand how the code is working.</p>
                     <p>This is only touching the surface of what this library can do. If you want to play some more with FlotCharts, you can take a look at the documentation on their website at <a href="http://www.flotcharts.org/">http://www.flotcharts.org/</a>.</p>
 
+                  </section>
+
                   </div>
                 </section>
 
@@ -328,9 +344,46 @@ function displayChart(){
         <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
         <script src="../js/vendor/snippet.min.js"></script>
         <script type="text/javascript">
+          
+          $('#tutorial1section1').hide();
+          $('#toggletutorial1section1').click(function(){
+            $('#tutorial1section1').toggle();
+            $('#toggletutorial1section1').html() == 'show' ? $('#toggletutorial1section1').html('hide') : $('#toggletutorial1section1').html('show')
+            return false;
+          });
+
+          $('#tutorial1section2').hide();
+          $('#toggletutorial1section2').click(function(){
+            $('#tutorial1section2').toggle();
+            $('#toggletutorial1section2').html() == 'show' ? $('#toggletutorial1section2').html('hide') : $('#toggletutorial1section2').html('show')
+            return false;
+          });
+
+          $('#tutorial1section3').hide();
+          $('#toggletutorial1section3').click(function(){
+            $('#tutorial1section3').toggle();
+            $('#toggletutorial1section3').html() == 'show' ? $('#toggletutorial1section3').html('hide') : $('#toggletutorial1section3').html('show')
+            return false;
+          });
+
+          $('#tutorial1section4').hide();
+          $('#toggletutorial1section4').click(function(){
+            $('#tutorial1section4').toggle();
+            $('#toggletutorial1section4').html() == 'show' ? $('#toggletutorial1section4').html('hide') : $('#toggletutorial1section4').html('show')
+            return false;
+          });
+
+          $('#tutorial1section5').hide();
+          $('#toggletutorial1section5').click(function(){
+            $('#tutorial1section5').toggle();
+            $('#toggletutorial1section5').html() == 'show' ? $('#toggletutorial1section5').html('hide') : $('#toggletutorial1section5').html('show')
+            return false;
+          });
+
           $(".htmlSnippet").snippet("html",{style:"ide-eclipse",transparent:true,showNum:false});
           $(".cssSnippet").snippet("css",{style:"ide-eclipse",transparent:true,showNum:false});
           $(".jsSnippet").snippet("javascript",{style:"ide-eclipse",transparent:true,showNum:false});
+          
 
         </script>
 

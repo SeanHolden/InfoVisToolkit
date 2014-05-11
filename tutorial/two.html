@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Information Visualization Toolkit</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="../css/normalize.min.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="../css/tutorial.css">
+        <link rel="stylesheet" href="../css/snippet.min.css">
+
+        <script src="../js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="header-container">
+            <header class="wrapper clearfix">
+                <h1 class="title">Information Visualization Toolkit</h1>
+            </header>
+        </div>
+
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+                <section class="tutorial-main-area">
+                  <div class="heading">
+                    <a href="one.html">&lt;&lt; Back to tutorial 1</a>
+                    <h1>Tutorial two:</h1>
+                    <h2>Adding user interactivity</h2>
+                    <h3 style="text-align:center;"><a href="https://github.com/SeanHolden/chartCreationDemo">See completed code</a></h3>
+                  </div>
+                  <div class="content">
+                    <h3>1: Create buttons to allow user to edit the chart type <a href="#" id="toggletutorial2section1" style="float:right;">show</a></h3>
+                    <section id="tutorial2section1">
+
+                    <p>First, lets create our buttons so that they appear on the page. Add the following to your <em>index.html</em> file, inside the <em>body</em>, undernearth the <em>placeholder</em> div element.</p>
+
+                    <p>Lets also give them appropriate IDs.</p>
+<pre class="htmlSnippet">
+  ...
+    &lt;br /&gt;
+    &lt;button id="line"&gt;Line&lt;/button&gt;
+    &lt;button id="column"&gt;Column&lt;/button&gt;
+  ...
+</pre>
+                     
+                    <p>If you reload your browser page, you should see the two buttons appearing below the chart.</p>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/addButtons.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+
+                    <p>Note that the buttons don't actually do anything yet, so lets write some code to make them useful.</p> 
+                    <p>Open up <em>main.js</em> and add the following line inside your jQuery helper.</p>
+
+<pre class="jsSnippet">
+  $(function(){
+    displayChart();
+    initializeChartTypeButtons(); // &lt;-- add this line.
+  });
+  ...
+</pre>
+
+                    <p>This is now calling a function that does not yet exist, so lets ensure that it does exist. Add the following lines to the bottom of the file:</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeChartTypeButtons(){
+  // code will go here
+}
+</pre>
+
+                    <p>In order to make the buttons display the correct chart, there must be a variable that can be changed. Lets create a new global object with these variables inside. We will do this by creating the object at the top of the page, outside of any functions. We will call this <em>settings</em> and we will add two keys to it. One named "lines" and the other "columns". We will set them both to false initially, as we want the buttons to be able to change them to true on click.</p>
+
+<pre class="jsSnippet">
+// top of page
+var settings = {
+  lines: false,
+  columns: false
+};
+...
+</pre>
+                    <p>Next, we need to change our <code>displayChart()</code> function. Lets simplify it by getting rid of one of the second <em>values</em> variables and lets just have one.</p>
+
+                    <p>Instead of <code>show: true</code> for the "lines" and "bars" options, lets append our <em>settings</em> values:</p>
+
+<pre class="jsSnippet">
+  ...
+function displayChart(){
+    var values = [ [0, 3], [2, 8], [4, 5], [6, 13], [8,0], [10,5] ];
+&nbsp;
+    $.plot("#placeholder", [{
+      data: values,
+      lines: { show: settings.lines },
+      bars: { show: settings.columns }
+    }]);
+}
+  ...
+</pre>
+
+
+                    <p>Now, going back to our <code>initializeChartTypeButtons()</code> that we declared earlier, lets add some code that will add a click event to our <em>line</em> button. This click event will set <code>settings.lines</code> to true and <code>settings.columns</code> to false.</p>
+
+                    <p>At the end of the click event, we must then call <code>displayChart()</code> again, in order to actually display the chart with the new changes (in this case, a line chart should appear).</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeChartTypeButtons(){
+  $('#line').click(function(){
+    settings.lines = true;
+    settings.columns = false;
+    displayChart(); // &lt;-- must call this function again after editing settings
+  });
+}
+</pre>
+
+                    <p>And in the same way, lets also add the <em>column</em> button's click event:</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeChartTypeButtons(){
+  $('#line').click(function(){
+    settings.lines = true;
+    settings.columns = false;
+    displayChart();
+  });
+  // Add the column click event:
+  $('#column').click(function(){
+    settings.lines = false;
+    settings.columns = true;
+    displayChart();
+  });
+}
+</pre>
+
+                    <p>Ensure that your <em>main.js</em> in its entirity now looks like this:</p>
+
+<pre class="jsSnippet">
+var settings = {
+  lines: false,
+  columns: false
+};
+&nbsp;
+$(function(){
+  displayChart();
+  initializeChartTypeButtons();
+});
+&nbsp;
+function displayChart(){
+    var values = [ [0, 3], [2, 8], [4, 5], [6, 13], [8,0], [10,5] ];
+&nbsp;
+    $.plot("#placeholder", [{
+      data: values,
+      lines: { show: settings.lines },
+      bars: { show: settings.columns }
+    }]);
+}
+&nbsp;
+function initializeChartTypeButtons(){
+  $('#line').click(function(){
+    settings.lines = true;
+    settings.columns = false;
+    displayChart();
+  });
+  $('#column').click(function(){
+    settings.lines = false;
+    settings.columns = true;
+    displayChart();
+  });
+}
+</pre>
+
+                    <p>Refresh your browser page and give the buttons a try! You should be able to switch between line and column charts by clicking the relevent buttons.</p>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/linebutton.png" style="width:45%;" />
+                      <img src="../img/tutorial/columnButton.png" style="width:45%;" />
+                    </div>
+
+                    </section>
+
+                    <hr />
+
+                    <h3>2: Add a text area that reads the user input <a href="#" id="toggletutorial2section2" style="float:right;">show</a></h3>
+                    <section id="tutorial2section2">
+
+                    <p>In order to get the user input, we need to enter an area that they can type into.</p>
+
+                    <p>Insert the following into your <em>index.html</em> document.</p>
+
+<pre class="htmlSnippet">
+  &lt;br /&gt;
+  &lt;textarea id="userinput"&gt;&lt;/textarea&gt;
+  &lt;button id="enterdata"&gt;Enter Data&lt;/button&gt;
+</pre>
+
+                    <p>After refreshing the page in your browser, you should have something that looks like this:</p>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/textArea.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+
+                   <p>Now, back inside <em>main.js</em></p>
+
+
+<pre class="jsSnippet">
+  ...
+$(function(){
+  displayChart();
+  initializeChartTypeButtons();
+  initializaEnterDataButton(); //&lt;-- add this line
+});
+ ...
+</pre>
+
+                    <p>Ensure that the function exists further down the page, and lets set up the click event for our new button, in the same way we did for the other buttons.</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeEnterDataButton(){
+  $('#enterdata').click(function(){
+    // code will go here
+  });
+}
+</pre>
+                   
+                   <p>Now add the following to say "take the value of the user input and send it out as an alert popup".</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeEnterDataButton(){
+  $('#enterdata').click(function(){
+    var userinput = $('#userinput').val();
+    alert(userinput);
+  });
+}
+</pre>
+
+                    <p>Refresh the page and type something into the text area. Now click the button. All going well, you should see an alert popup with your input displayed. <strong>The page is now successfully reading the user input.</strong></p>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/alert.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+                    
+                    </section>
+                    
+                    <hr />                    
+
+                    <h3>3: Plot a chart with the user input <a href="#" id="toggletutorial2section3" style="float:right;">show</a></h3>
+                    <section id="tutorial2section3">
+
+                  <p>Before continuing, remove the "alert" line now, as we will no longer need it.</p>
+
+
+                  <p>At the top of <em>main.js</em>, inside the settings object, lets add a new <code>data</code> variable. Set it to be an empty array to start with.</p>
+
+<pre class="jsSnippet">
+var settings = {
+  lines: false,
+  columns: false, //&lt;-- don't forget comma
+  data: [] //&lt;-- add this line
+};
+  ...
+</pre>
+
+                    <p>This will be used to store the user input in order for the chart to display it effectively.</p>
+
+
+                    <p>Now lets add some code that will take user input (in CSV format).</p>
+
+                    <p>For simplicity, lets make it so that the top line is the x-axis and the second line is the y-axis.</p>
+
+                    <p>A user could, for example, enter something like this:</p>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/twolines.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+
+                    <p>We can take this input, seperate the two lines and store them in variables:</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeEnterDataButton(){
+  $('#enterdata').click(function(){
+    var userinput = $('#userinput').val();
+    var lines = userinput.split('\n') // &lt;-- split by new line
+    var xaxis = lines[0]; // &lt;-- our x axis is first line
+    var yaxis = lines[1]; // &lt;-- our y axis is second line
+  });
+}
+</pre>
+
+                    <p>Now, we need to split the x-axis and y-axis lines by the commas, in order to seperate each individual value.</p>
+
+                    <p>Lets make it so that xaxis and yaxis contain an array of values.</p>
+
+                    <p>Edit the above snippet to become the following:</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeEnterDataButton(){
+  $('#enterdata').click(function(){
+    var userinput = $('#userinput').val();
+    var lines = userinput.split('\n')
+    var xaxis = lines[0].split(','); // &lt;-- split by comma
+    var yaxis = lines[1].split(','); // &lt;--  "        "
+  });
+}
+</pre>
+
+
+                    <p>Next we need to put our x and y values in the required format for flotcharts to recognize. This being an array of arrays, containing x and y values inside each array. Then we want to put our final formatted value into our global "settings" object from earlier</p>
+
+                    <p>The following code snippet will do this, using a for loop:</p>
+
+<pre class="jsSnippet">
+function initializeEnterDataButton(){
+  $('#enterdata').click(function(){
+    var userinput = $('#userinput').val();
+    var lines = userinput.split('\n')
+    var xaxis = lines[0].split(',');
+    var yaxis = lines[1].split(',');
+    &nbsp;
+    var dataValues = [];
+    &nbsp;
+    for(var i=0;i&lt;xaxis.length;i++){
+      dataValues.push([xaxis[i],yaxis[i]]);
+    }
+    settings.data = dataValues; // &lt;-- update settings.data
+    displayChart();
+  });
+}
+</pre>
+
+                    <p>Note that the loop goes over each x-axis value, which means the y-axis must have the same number of values as x in order for this to work as expected. To be honest, it would not make much sense otherwise anyway.</p>
+
+                    <p>Finally, we just need to edit the flotcharts' <code>$.plot</code> function so that the data is set as our <code>settings.data</code> value.</p>
+
+<pre class="jsSnippet">
+  ...
+  $.plot("#placeholder", [{
+    data: settings.data, // &lt;-- edit this line
+    lines: { show: settings.lines },
+    bars: { show: settings.columns }
+  }]);
+  ...
+</pre>
+
+                    <p>This should do it. Now try it out in your browser after refreshing the page.</p>
+
+                    <p>If it does not work as expected, ensure your <em>main.js</em> file looks like this:</p>
+
+<pre class="jsSnippet">
+var settings = {
+  lines: false,
+  columns: false,
+  data: []
+};
+&nbsp;
+$(function(){
+  displayChart();
+  initializeChartTypeButtons();
+  initializeEnterDataButton();
+});
+&nbsp;
+function displayChart(){
+    $.plot("#placeholder", [{
+      data: settings.data,
+      lines: { show: settings.lines },
+      bars: { show: settings.columns }
+    }]);
+}
+&nbsp;
+function initializeChartTypeButtons(){
+  $('#line').click(function(){
+    settings.lines = true;
+    settings.columns = false;
+    displayChart();
+  });
+  $('#column').click(function(){
+    settings.lines = false;
+    settings.columns = true;
+    displayChart();
+  });
+}
+&nbsp;
+function initializeEnterDataButton(){
+  $('#enterdata').click(function(){
+    var userinput = $('#userinput').val();
+    var lines = userinput.split('\n')
+    var xaxis = lines[0].split(',');
+    var yaxis = lines[1].split(',');
+&nbsp;
+    var dataValues = [];
+&nbsp;
+    for(var i=0;i&lt;xaxis.length;i++){
+      dataValues.push([xaxis[i],yaxis[i]]);
+    }
+    settings.data = dataValues;
+    displayChart();
+  });
+}
+</pre>
+
+
+                    <p><strong>Congratulations!</strong> You now have an interactive chart that can be changed from column to line, and the X and Y data entered by the user.</p>
+
+                  </section>
+
+                    <hr />
+
+                    <h3>4: Add chart titles <a href="#" id="toggletutorial2section4" style="float:right;">show</a></h3>
+                    <section id="tutorial2section4">
+
+                    <p>We can add chart titles fairly simply ourselves by positioning HTML elements in the right place around the chart. However, for the sake of this tutorial, and to not have to worry about text rotation and positioning, we can download a library that will make this task simpler.</p>
+
+                    <p>Download the third party JavaScript library <a href="https://raw.githubusercontent.com/xuanluo/flot-axislabels/master/jquery.flot.axislabels.js">jquery.flot.axislabels.js</a> and add it to your <em>js/libraries</em> directory.</p>
+
+                    <p>Once there, ensure you link your HTML page to it. Place this line in your HTML. Ensure it is in between your other library scripts and your <em>main.js</em> script. <strong>The ordering is important</strong>. Like the following:</p>
+
+<pre class="htmlSnippet">
+&lt;script type="text/javascript" src="js/libraries/jquery-1.11.0.min.js"&gt;
+&lt;/script&gt;
+&lt;script type="text/javascript" src="js/libraries/jquery.flot.min.js"&gt;
+&lt;/script&gt;
+&lt;script type="text/javascript" src="js/libraries/jquery.flot.axislabels.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/main.js"&gt;&lt;/script&gt;
+</pre>
+
+
+                    <p>Now head back into your <em>main.js</em> and edit your <code>displayChart()</code> function again. This time it should look like the following. Notice that there are now "chart" and "options" variables. This is to make the code more readable. The bigger the arrays and objects become, the more mesy the code will get. This is a way of keeping the options readable.</p>
+
+<pre class="jsSnippet">
+function displayChart(){
+    var chart = [{
+      data: settings.data,
+      lines: { show: settings.lines },
+      bars: { show: settings.columns }
+    }];
+&nbsp;
+    var options = {
+      xaxis: { axisLabel: 'XAxis Label' },
+      yaxis: { axisLabel: 'YAxis Label'}
+    };
+&nbsp;
+    $.plot("#placeholder", chart, options );
+}
+</pre>
+
+                    <p>Refreshing the page in your browser at this point, you should see that you now have some static axis labels.</p>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/axisLabels1.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+
+                    <p>For the final part of this section, we can add a main title to our chart. This can be simply done in our <em>index.html</em> document.</p>
+
+                    <p>Enter the following line of code on the line <strong>above</strong> your <em>placeholder</em> div element:</p>
+
+<pre class="htmlSnippet">
+  &lt;h2 id="mainTitle"&gt;Main Title&lt;/h2&gt;
+</pre>
+
+                    <div style="text-align:center;">
+                      <img src="../img/tutorial/maintitle.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                    </div>
+
+                    <p>Your chart now has labels and a title! Although they are only static. The next section will enable a user to edit these labels at will.</p>
+                    
+                    </section>
+
+                    <hr />
+
+                    <h3>5: Allow user to edit the chart titles. <a href="#" id="toggletutorial2section5" style="float:right;">show</a></h3>
+                    <section id="tutorial2section5">
+
+                    <p>Underneath your <em>enter data</em> button inside your <em>index.html</em>, enter the following few lines:</p>
+
+<pre class="htmlSnippet">
+  &lt;br /&gt;
+  &lt;input type="text" id="XaxisLabelInput" /&gt;
+  &lt;button id="editXaxisLabel"&gt;Edit XAxis Label&lt;/button&gt;&lt;br /&gt;
+  &lt;input type="text" id="YaxisLabelInput" /&gt;
+  &lt;button id="editYaxisLabel"&gt;Edit YAxis Label&lt;/button&gt;&lt;br /&gt;
+  &lt;input type="text" id="ChartTitleInput" /&gt;
+  &lt;button id="editChartTitle"&gt;Edit Chart Title&lt;/button&gt;
+</pre>
+
+
+                 <p>Refreshing your browser should display the following text input areas and buttons:</p>
+
+                 <div style="text-align:center;">
+                   <img src="../img/tutorial/axisLabelInput.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                 </div>
+
+                 <p>As usual, we must now go into <em>main.js</em> to make these buttons useful.</p>
+
+                 <p>Enter the following line into your <em>jQuery helper function:</em></p>
+
+<pre class="jsSnippet">
+  ...
+$(function(){
+  displayChart();
+  initializeChartTypeButtons();
+  initializeEnterDataButton();
+  initializeChartTitleButtons(); // &lt;-- add this line
+});
+  ...
+</pre>
+
+                  <p>...and as before, we must now create this function somewhere:</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeChartTitleButtons(){
+  // code will go here
+}
+
+</pre>
+
+                  <p>Lets update our <em>settings</em> object to have three new values for our titles:</p>
+
+<pre class="jsSnippet">
+var settings = {
+  lines: false,
+  columns: false,
+  data: [],
+  xaxisLabel: 'edit me', // &lt;--
+  yaxisLabel: 'edit me', // &lt;--
+  chartLabel: 'edit me'  // &lt;--
+};
+  ...
+</pre>
+
+                  <p>In our <code>displayChart()</code> function, update the <code>options</code> variable so that instead of being set as static text, our axis labels are set as our new values in our settings objects:</p>
+
+<pre class="jsSnippet">
+  ...
+    var options = {
+      xaxis: { axisLabel: settings.xaxisLabel },
+      yaxis: { axisLabel: settings.yaxisLabel }
+    };
+  ...
+</pre>
+
+                  <p>Now we are all set up to add our click event to our buttons. We want our buttons to read whatever is in the corresponding inputbox and then update the necessary label. Edit your <code>initializeChartTitleButtons()</code> function like so:</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeChartTitleButtons(){
+  $('#editXaxisLabel').click(function(){
+    settings.xaxisLabel = $('#XaxisLabelInput').val();
+    displayChart();
+  });
+}
+</pre>
+
+                <p>Here we have updated the <code>settings.xaxisLabel</code> to be whatever is inside the input field when the user clicks the button.</p>
+
+                <p>Lets now add the y-axis in the same way.</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeChartTitleButtons(){
+  $('#editXaxisLabel').click(function(){
+    settings.xaxisLabel = $('#XaxisLabelInput').val();
+    displayChart();
+  });
+  $('#editYaxisLabel').click(function(){
+    settings.yaxisLabel = $('#YaxisLabelInput').val();
+    displayChart();
+  });
+}
+</pre>
+
+                  <p><strong>Great!</strong> Now refreshing your browser, you can try it out!</p>
+
+                  <div style="text-align:center;">
+                   <img src="../img/tutorial/axisLabelsDone.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                 </div>
+
+                 <p>Finally, we need to get our main chart title to update.</p>
+
+                 <p>Add the following code to our <code>initializeChartTitleButtons()</code> function to achieve this:</p>
+
+<pre class="jsSnippet">
+  ...
+function initializeChartTitleButtons(){
+  $('#editXaxisLabel').click(function(){
+    settings.xaxisLabel = $('#XaxisLabelInput').val();
+    displayChart();
+  });
+  $('#editYaxisLabel').click(function(){
+    settings.yaxisLabel = $('#YaxisLabelInput').val();
+    displayChart();
+  });
+  $('#editChartTitle').click(function(){
+    var chartTitle = $('#ChartTitleInput').val();
+    $('#mainTitle').html(chartTitle);
+  });
+}
+</pre>
+
+                  <p><strong>That's it!</strong> Your chart should now be fully interactive. You should have something that resembles the screenshot below.</p>
+
+                  <div style="text-align:center;">
+                   <img src="../img/tutorial/complete.png" style="border:1px solid black;border-radius:5px;width:50%;" />
+                 </div>
+
+                 <p><strong>Congratulations!</strong> You have completed this tutorial. There are lots of other tweaks you can do to further improve the chart you have created. You can check out the documentation at <a href="http://www.flotcharts.org/">http://www.flotcharts.org/</a> for an idea of what can be done with the flotcharts plugin.</p>
+
+               </section>
+
+                  </div>
+                </section>
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+
+        <div class="footer-container">
+            <footer class="wrapper">
+                <h3>Sean Holden - University of Leeds</h3>
+            </footer>
+        </div>
+
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+        <script src="../js/vendor/snippet.min.js"></script>
+        <script type="text/javascript">
+
+          $('#tutorial2section1').hide();
+          $('#toggletutorial2section1').click(function(){
+            $('#tutorial2section1').toggle();
+            $('#toggletutorial2section1').html() == 'show' ? $('#toggletutorial2section1').html('hide') : $('#toggletutorial2section1').html('show')
+            return false;
+          });
+
+          $('#tutorial2section2').hide();
+          $('#toggletutorial2section2').click(function(){
+            $('#tutorial2section2').toggle();
+            $('#toggletutorial2section2').html() == 'show' ? $('#toggletutorial2section2').html('hide') : $('#toggletutorial2section2').html('show')
+            return false;
+          });
+
+          $('#tutorial2section3').hide();
+          $('#toggletutorial2section3').click(function(){
+            $('#tutorial2section3').toggle();
+            $('#toggletutorial2section3').html() == 'show' ? $('#toggletutorial2section3').html('hide') : $('#toggletutorial2section3').html('show')
+            return false;
+          });
+
+          $('#tutorial2section4').hide();
+          $('#toggletutorial2section4').click(function(){
+            $('#tutorial2section4').toggle();
+            $('#toggletutorial2section4').html() == 'show' ? $('#toggletutorial2section4').html('hide') : $('#toggletutorial2section4').html('show')
+            return false;
+          });
+
+          $('#tutorial2section5').hide();
+          $('#toggletutorial2section5').click(function(){
+            $('#tutorial2section5').toggle();
+            $('#toggletutorial2section5').html() == 'show' ? $('#toggletutorial2section5').html('hide') : $('#toggletutorial2section5').html('show')
+            return false;
+          });
+
+
+          $(".htmlSnippet").snippet("html",{style:"ide-eclipse",transparent:true,showNum:false});
+          $(".cssSnippet").snippet("css",{style:"ide-eclipse",transparent:true,showNum:false});
+          $(".jsSnippet").snippet("javascript",{style:"ide-eclipse",transparent:true,showNum:false});
+        </script>
+
+    </body>
+</html>

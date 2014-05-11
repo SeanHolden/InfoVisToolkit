@@ -42,16 +42,8 @@ $(function(){
   checkFileApiSupport();
   // Make textarea automatically increase in size when data is entered.
   $('.infovis-area textarea').autogrow();
-  // initReloadDataButton();
-  // initStackToggleButton();
   stackedOrUnstackedButtons();
-  // initBarWidthAdjust();
-  // initFlipDataButton();
-  // initChartTypeRadioButtons();
   initResizeWindow();
-  // initMoveLegendButton();
-  // initRotateButton();
-  // initDragTitles();
   tooltipsToggle();
   addParagraphButtons();
   addOverallTitleButton();
